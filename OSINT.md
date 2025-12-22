@@ -84,7 +84,6 @@ HTB{STFRSTEVFR}
 
 ## 🚢 FrostFleet – RiverWatch
 
-### 📖 Contexto del reto
 
 ### 📖 Enunciado (Original)
 
