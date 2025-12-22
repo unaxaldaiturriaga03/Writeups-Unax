@@ -1,11 +1,7 @@
-Enunciado:
+**Enunciado:**
 Clock Work Memory Twillie's "Clockwork Memory" pocketwatch is broken. The memory it holds, a precious story about the Starshard, has been distorted. By reverse-engineering the intricate "clockwork" mechanism of the pocketwatch.wasm file, you can discover the source of the distortion and apply the correct "peppermint" key to remember the truth.
 
 Dificultad: easy
-
-Writeup — Clock Work Memory
-Reversing · WebAssembly · Hack The Box
-Challenge Information
 
 Nombre: Clock Work Memory
 
