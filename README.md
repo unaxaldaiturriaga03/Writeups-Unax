@@ -6,7 +6,6 @@ Son los primeros writeups que hago y los subo principalmente para **aprender y l
 
 No son perfectos ni muy detallados todavía, pero poco a poco iré mejorando la calidad y el formato de los writeups.  
 
-Actualmente hay retos de tipo OSINT, con explicaciones de cómo resolví cada uno, y en el futuro se irán añadiendo más categorías.  
-
 La intención principal es **aprender y documentar**, más que crear guías profesionales.  
 
+Unax
