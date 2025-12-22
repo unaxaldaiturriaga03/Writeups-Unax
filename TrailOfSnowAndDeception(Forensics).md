@@ -67,7 +67,7 @@ Revisando peticiones HTTP POST al endpoint de login de Cacti, se detectaron cred
 ### ✅ Flag
 
 ```
-HTB{admin:admin}
+HTB{mernie:thistlewhip:Z4ZP_8QzKA}
 ```
 
 ---
