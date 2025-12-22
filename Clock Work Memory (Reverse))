@@ -1,0 +1,93 @@
+Enunciado:
+Clock Work Memory Twillie's "Clockwork Memory" pocketwatch is broken. The memory it holds, a precious story about the Starshard, has been distorted. By reverse-engineering the intricate "clockwork" mechanism of the pocketwatch.wasm file, you can discover the source of the distortion and apply the correct "peppermint" key to remember the truth.
+
+Dificultad: easy
+
+En este reto se nos proporciona un binario WebAssembly (pocketwatch.wasm).
+La narrativa sugiere que una memoria ha sido “distorsionada” y que debe aplicarse la clave correcta para restaurarla.
+
+Desde el punto de vista técnico, estamos ante un reto de reversing puro, donde la flag no se imprime, sino que se reconstruye dinámicamente en memoria.
+
+🔍 Análisis inicial
+
+El primer paso es inspeccionar el binario:
+
+wasm2wat pocketwatch.wasm
+
+Esto convierte el archivo .wasm a formato texto (.wat) y permite analizar su lógica interna.
+
+Al revisar el código, destaca la función exportada:
+
+(export "check_flag" (func 1))
+
+⚠️ Importante:
+No existe ninguna función que imprima la flag.
+check_flag solo valida, no revela.
+
+⚙️ Funcionamiento interno de check_flag
+
+Analizando la función paso a paso, observamos lo siguiente:
+
+🧱 Reserva de stack
+global.get 0
+i32.const 32
+i32.sub
+local.tee 2
+global.set 0
+
+Se reservan 32 bytes en el stack
+
+local 2 apunta al inicio del buffer
+
+🔐 Descifrado mediante XOR
+
+Se ejecuta un bucle de 23 iteraciones donde:
+
+Se leen bytes de un bloque data
+
+Se aplica una operación XOR
+
+El resultado se escribe en el buffer del stack
+
+Al finalizar, se añade un terminador nulo:
+
+i32.store8 offset=23
+
+Esto deja una cadena C válida en memoria.
+
+❌ Comparación final
+
+La cadena reconstruida se compara byte a byte con la entrada del usuario.
+La función solo devuelve 1 si TODA la cadena coincide
+
+🧠 Enfoque correcto
+
+La clave del reto es entender que:
+
+La flag existe completa en memoria antes de ser comparada
+
+Por tanto, el enfoque correcto no es adivinar la flag, sino leerla directamente desde memoria.
+
+🧪 Extracción desde memoria
+
+El puntero global del stack está inicializado en:
+
+(global (;0;) (mut i32) (i32.const 66592))
+
+Como se reservan 32 bytes, el buffer comienza en:
+
+66592 - 32
+
+Leyendo 23 bytes desde esa dirección se obtiene la flag completa.
+
+✅ Conclusión
+
+Este reto demuestra que en reversing moderno:
+
+❌ El brute force no siempre es viable
+
+✅ Entender el flujo de ejecución es clave
+
+✅ Leer memoria en el momento adecuado resuelve el reto
+
+Un ejercicio excelente para familiarizarse con WebAssembly y gestión de stack.
