@@ -1,0 +1,203 @@
+# 🕵️ Trail of Snow and Deception – Forensics Write-Up
+
+## 📌 Información general
+
+- **Categoría:** Forensics  
+- **Número de flags:** 7  
+- **Escenario:** Análisis de tráfico de red tras un compromiso en un servidor Cacti  
+- **Objetivo:** Identificar el vector de ataque, los artefactos maliciosos y la información sensible exfiltrada.
+
+---
+
+## 🧩 Enunciado (traducción)
+
+Oliver Mirth, el experto forense de Tinselwick, seguía un rastro de polvo brillante que se perdía entre la nieve. No había huellas ni signos de lucha. La luz del Snowglobe en lo alto de la torre Sprucetop parpadeaba débilmente.
+
+> “Alguien ha estado manipulando la magia”, murmuró Oliver.
+
+Aunque el rastro había desaparecido, el misterio no había hecho más que empezar.
+
+**¿Podrá Oliver descubrir el secreto detrás del brillo que se desvanece?**
+
+---
+
+## 🧪 Metodología
+
+El análisis se realizó sobre un archivo **PCAP**, utilizando principalmente:
+
+- **Wireshark**
+- Decodificación **Base64**
+- **OpenSSL** para descifrado AES
+- Análisis manual de flujos HTTP
+
+Se investigaron:
+- Peticiones HTTP sospechosas
+- Ejecución remota de comandos
+- Webshells PHP
+- Exfiltración de información del sistema
+
+---
+
+## 🚩 Flag 1 – Versión de Cacti
+
+**Pregunta:**  
+What is the Cacti version in use?
+
+### 🔍 Análisis
+
+Inspeccionando respuestas HTTP del servidor, se observó claramente la versión de Cacti en el contenido HTML.
+
+### ✅ Flag
+
+```
+HTB{1.2.28}
+```
+
+---
+
+## 🚩 Flag 2 – Credenciales de acceso
+
+**Pregunta:**  
+What is the set of credentials used to log in to the instance?
+
+### 🔍 Análisis
+
+Revisando peticiones HTTP POST al endpoint de login de Cacti, se detectaron credenciales enviadas en texto plano.
+
+### ✅ Flag
+
+```
+HTB{admin:admin}
+```
+
+---
+
+## 🚩 Flag 3 – Archivos PHP maliciosos
+
+**Pregunta:**  
+Three malicious PHP files are involved in the attack. In order of appearance in the network stream, what are they?
+
+### 🔍 Análisis
+
+Aplicando filtros en Wireshark (`http.request.uri contains ".php"`) y centrándonos en rutas no legítimas bajo `/cacti/`, se identificaron tres webshells con nombres aleatorios.
+
+El orden de aparición fue:
+
+1. `JWUA5a1yj.php`
+2. `ornF85gfQ.php`
+3. `f54Avbg4.php`
+
+### ✅ Flag
+
+```
+HTB{JWUA5a1yj.php,ornF85gfQ.php,f54Avbg4.php}
+```
+
+---
+
+## 🚩 Flag 4 – Archivo descargado con curl
+
+**Pregunta:**  
+What file gets downloaded using curl during exploitation process?
+
+### 🔍 Análisis
+
+Filtrando peticiones con el User-Agent `curl/8.11.1`, se observó la descarga directa de un archivo ejecutable durante el proceso de explotación.
+
+### ✅ Flag
+
+```
+HTB{bash}
+```
+
+---
+
+## 🚩 Flag 5 – Variable que almacena la salida del comando
+
+**Pregunta:**  
+What is the name of the variable in one of the three malicious PHP files that stores the result of the executed system command?
+
+### 🔍 Análisis
+
+Uno de los webshells (`f54Avbg4.php`) fue reconstruido a partir de un payload Base64. En el código PHP resultante se observó:
+
+```php
+$a54vag = shell_exec($A4gVaXzY);
+```
+
+La variable que almacena la salida del comando es `$a54vag`.
+
+### ✅ Flag
+
+```
+HTB{$a54vag}
+```
+
+---
+
+## 🚩 Flag 6 – Hostname del sistema
+
+**Pregunta:**  
+What is the system machine hostname?
+
+### 🔍 Análisis
+
+El atacante ejecutó remotamente el comando `hostname`.  
+La respuesta estaba cifrada con **AES-256-CBC** y codificada en **Base64**, utilizando las claves embebidas en el webshell.
+
+Tras el descifrado, el resultado fue:
+
+```
+tinselmon01
+```
+
+### ✅ Flag
+
+```
+HTB{tinselmon01}
+```
+
+---
+
+## 🚩 Flag 7 – Contraseña de la base de datos de Cacti
+
+**Pregunta:**  
+What is the database password used by Cacti?
+
+### 🔍 Análisis
+
+Se detectó la ejecución del comando:
+
+```bash
+cat include/config.php
+```
+
+El response HTTP:
+- Estaba marcado como *ignored* en Wireshark
+- Usaba `Transfer-Encoding: chunked`
+- Estaba cifrado con AES-256-CBC
+
+Tras decodificar y descifrar el contenido, se obtuvo el archivo `include/config.php`, donde aparecía la contraseña de la base de datos.
+
+### ✅ Flag
+
+```
+HTB{cactiP@ssw0rd!}
+```
+
+---
+
+## 🏁 Conclusión
+
+Este reto recrea un **compromiso realista de Cacti**, combinando:
+- Credenciales débiles
+- Upload de webshells
+- Ejecución remota de comandos
+- Cifrado de la salida para evadir análisis
+- Exfiltración de credenciales sensibles
+
+El uso de cifrado simétrico dentro del webshell añade una capa extra de dificultad, obligando a un análisis profundo del tráfico y del código malicioso.
+
+---
+
+✍️ *Write-up elaborado para su publicación en GitHub.*
