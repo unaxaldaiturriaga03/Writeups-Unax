@@ -86,8 +86,12 @@ HTB{STFRSTEVFR}
 
 ### 📖 Contexto del reto
 
-En este desafío, se recibe una alerta automática de socorro de la embarcación **FROSTSTAR**, que desaparece durante una patrulla fluvial en Nochebuena.  
-La última señal AIS registrada proporciona una **posición GPS**, y el objetivo es determinar **en qué muelle exacto encalló el barco** antes de que las condiciones empeoren.
+### 📖 Enunciado (Original)
+
+> *"A Maritime Investigator at Tinselwick River Authority has received an automated distress alert from patrol vessel FROSTSTAR, which went dark during a Christmas Eve patrol along the Frostwick River. The vessel's AIS system transmitted one final ""ghost ping"" before all communications ceased. The investigator must analyze the AIS coordinates, calculate distances to all registered river docks using the Haversine formula, cross-reference Captain Wintergale's log entries for observational clues, and identify the exact dock where the vessel ran aground to dispatch the rescue team before the incoming storm makes the river impassable."*  
+>  
+> **Flag Format:** `HTB{DOCK_NAME_DOCK_ID} Example: HTB{HARBOR_POINT_D042}`
+> **Example:** `HTB{HARBOR_POINT_D042}`
 
 ---
 
