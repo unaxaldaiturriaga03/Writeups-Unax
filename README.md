@@ -1,1 +1,120 @@
 # HTB-University-CTF-2025-Writeups-Spanish
+**Enunciado:**
+Clock Work Memory Twillie's "Clockwork Memory" pocketwatch is broken. The memory it holds, a precious story about the Starshard, has been distorted. By reverse-engineering the intricate "clockwork" mechanism of the pocketwatch.wasm file, you can discover the source of the distortion and apply the correct "peppermint" key to remember the truth.
+
+Dificultad: easy
+
+Nombre: Clock Work Memory
+
+Categoría: Reversing
+
+Plataforma: Hack The Box
+
+Objetivo: Recuperar la flag oculta dentro de un binario WebAssembly
+
+🧠 Descripción
+
+Se nos da un archivo pocketwatch.wasm, un binario WebAssembly.
+La historia narra un reloj con memoria distorsionada que debe restaurarse con una clave correcta. Esto sugiere que la flag está ofuscada dentro del binario, y que debemos analizar su lógica interna para recuperarla.
+
+Nuestro objetivo fue entender cómo reconstruir dicha flag y extraerla sin explotación externa, basándonos únicamente en análisis estático y dinámico del binario.
+
+🔍 Análisis del binario
+
+Convertimos el binario WebAssembly a formato .wat con:
+
+wasm2wat pocketwatch.wasm
+
+
+Esto nos permitió inspeccionar la lógica interna.
+Encontramos que la función exportada principal es:
+
+(export "check_flag" (func 1))
+
+
+⚠️ Importante:
+Esta función comprueba la flag, pero no la imprime.
+
+La lógica detectada fue:
+
+Se reserva memoria en el stack para construir la flag.
+
+Se rellena con datos descifrados (XOR).
+
+Se compara con la entrada del usuario.
+
+📌 Esto indica que la flag se construye internamente antes de la comparación.
+
+🧱 Funcionamiento interno
+
+El flujo más relevante es:
+
+Reserva de espacio en stack:
+
+global.get 0
+i32.const 32
+i32.sub
+local.tee 2
+global.set 0
+
+
+Se reservan 32 bytes de stack para construir la cadena.
+
+Descifrado / XOR:
+
+El programa recorre 23 bytes de datos ofuscados, los XORea y los escribe en el buffer.
+
+Terminador nulo:
+
+i32.store8 offset=23
+
+
+Esto añade un terminador \0, indicando el final de la cadena.
+
+Comparación contra la entrada:
+
+El binario compara byte a byte con lo que tú ingreses. Si coinciden, retorna 1; si no, 0.
+
+Este diseño no nos permite usar brute force incremental, ya que el valor 0 solo indica “no es correcto”, sin revelar información parcial.
+
+🚫 Métodos descartados
+
+El análisis reveló que enfoques como:
+
+Fuerza bruta carácter a carácter
+
+Oracle parcial basado en retorno de la función
+
+Brute force con terminador manual
+
+no eran aplicables, porque la función solo devuelve 1 si toda la cadena completa coincide. No hay retorno diferenciado por prefijo correcto o incorrecto.
+
+🧪 Enfoque correcto: lectura directa de memoria
+
+Sabemos que el binario construye completamente la flag en memoria antes de compararla.
+Podemos aprovechar esto leyendo el buffer justo después de que el binario construye la cadena.
+
+El valor inicial del stack global es:
+
+(global (;0;) (mut i32) (i32.const 66592))
+
+
+Como se reservan 32 bytes, sabemos que la flag está en:
+
+66592 - 32
+
+
+Leyendo 23 bytes desde esa dirección obtenemos la flag completa.
+
+🏁 Flag
+HTB{cl0ck_w0rk_m3m0ry}
+
+📌 Conclusiones
+
+🎯 Lecciones clave:
+
+No siempre es necesario brute force.
+
+Entender el flujo de ejecución puede dar acceso a datos intermedios.
+
+WebAssembly puede ser analizado efectivamente con wasm2wat.
