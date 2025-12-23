@@ -45,6 +45,7 @@ CTF-Writeups-Spanish/
 ├── Pwn/
 └── Crypto/
 
+Si en el futuro realizo writeups de plataformas distintas a las actuales (por ejemplo, además de Hack The Box), se irán **añadiendo nuevas carpetas** y este **README será actualizado** para reflejar los cambios.
 
 Cada reto tiene su propia carpeta con un `README.md` donde se documenta la solución.
 
