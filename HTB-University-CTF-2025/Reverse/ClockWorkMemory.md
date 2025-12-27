@@ -21,20 +21,19 @@ Twillie's *"Clockwork Memory"* pocketwatch is broken. The memory it holds, a pre
 
 ## 🧠 Descripción
 
-Se nos da un archivo `pocketwatch.wasm`, un binario **WebAssembly**.
-
-<img width="932" height="300" alt="image" src="https://github.com/user-attachments/assets/ca2beb13-5de5-49f5-979c-37b58eb57fdb" />
-
-
 La historia narra un reloj con memoria distorsionada que debe restaurarse con una clave correcta. Esto sugiere que **la flag está ofuscada dentro del binario**, y que debemos analizar su lógica interna para recuperarla.
 
 Nuestro objetivo fue **entender cómo reconstruir dicha flag y extraerla sin explotación externa**, basándonos únicamente en **análisis estático y dinámico** del binario.
+
+Se nos da un archivo `pocketwatch.wasm`, un binario **WebAssembly**.
+
+<img width="932" height="300" alt="image" src="https://github.com/user-attachments/assets/ca2beb13-5de5-49f5-979c-37b58eb57fdb" />
 
 ---
 
 ## 🔍 Análisis del binario
 
-Convertimos el binario WebAssembly a formato `.wat` con:
+Convertimos el binario WebAssembly con:
 
 ```bash
 wasm2wat pocketwatch.wasm
@@ -42,7 +41,7 @@ wasm2wat pocketwatch.wasm
 
 Esto me permitió inspeccionar la lógica interna del programa.
 
-```wat
+```wasm
 [/Descargas/rev_clock_work_memory]
 $ wasm2wat pocketwatch.wasm    
 (module
