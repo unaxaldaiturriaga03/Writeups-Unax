@@ -226,18 +226,6 @@ Este diseño **no permite brute force incremental**, ya que el valor `0` solo in
 
 ---
 
-## 🚫 Métodos descartados
-
-Tras el análisis, se descartaron los siguientes enfoques:
-
-- Fuerza bruta carácter a carácter  
-- Oracle parcial basado en el valor de retorno  
-- Brute force usando terminadores manuales  
-
-Esto se debe a que la función **solo devuelve éxito si la cadena completa coincide**, sin diferenciar prefijos correctos o incorrectos.
-
----
-
 ## 🧪 Enfoque correcto: lectura directa de memoria
 
 Sabemos que el binario **construye completamente la flag en memoria antes de compararla**.  
