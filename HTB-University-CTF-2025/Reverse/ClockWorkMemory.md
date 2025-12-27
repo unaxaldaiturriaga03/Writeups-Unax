@@ -201,7 +201,7 @@ Se reservan **32 bytes de stack** para construir la cadena.
 
 El programa recorre **23 bytes** de datos ofuscados, aplica una operación **XOR** y escribe el resultado en el buffer reservado.
 
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/5fdf04d0-6aca-40a1-b5cf-d032af1964c7" />
+<img width="805" height="617" alt="image" src="https://github.com/user-attachments/assets/97115e80-d80e-4b36-a882-95bbd7faab80" />
 
 ---
 
