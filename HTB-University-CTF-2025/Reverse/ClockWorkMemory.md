@@ -152,8 +152,6 @@ $ wasm2wat pocketwatch.wasm
   (data (;0;) (i32.const 1024) "\1c\1b\010#{0&\0b=p=\0b~0\147\7fs'un>"))
 ```
 
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9fd15035-f865-4736-8026-df26155de441" />
-
 Funciones:
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f198c43d-d46c-4c86-972d-616f76fa21d7" />
 
