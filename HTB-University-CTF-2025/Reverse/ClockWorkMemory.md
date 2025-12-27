@@ -23,7 +23,7 @@ Twillie's *"Clockwork Memory"* pocketwatch is broken. The memory it holds, a pre
 
 Se nos da un archivo `pocketwatch.wasm`, un binario **WebAssembly**.
 
-<img width="332" height="64" alt="image" src="https://github.com/user-attachments/assets/ca2beb13-5de5-49f5-979c-37b58eb57fdb" />
+<img width="932" height="300" alt="image" src="https://github.com/user-attachments/assets/ca2beb13-5de5-49f5-979c-37b58eb57fdb" />
 
 
 La historia narra un reloj con memoria distorsionada que debe restaurarse con una clave correcta. Esto sugiere que **la flag está ofuscada dentro del binario**, y que debemos analizar su lógica interna para recuperarla.
