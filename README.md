@@ -31,7 +31,7 @@ El contenido está pensado con un **enfoque educativo**.
 
 ---
 ## 🗂️ Estructura de carpetas
-
+´´´
 writeups/
 ├── README.md
 ├── LICENSE
@@ -47,7 +47,7 @@ writeups/
 ├── Pwn/
 └── Crypto/
 
-
+´´´
 Cada reto tiene su propia carpeta con un `README.md` donde se documenta la solución.
 
 ---
