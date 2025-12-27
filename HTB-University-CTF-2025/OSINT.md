@@ -181,4 +181,4 @@ Son ejemplos claros de **retos OSINT narrativos**, donde el éxito depende más 
 
 ---
 
-✍️ *Writeup elaborado con fines educativos y de documentación personal.*
+
