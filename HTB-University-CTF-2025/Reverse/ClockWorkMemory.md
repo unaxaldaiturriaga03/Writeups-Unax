@@ -153,7 +153,8 @@ $ wasm2wat pocketwatch.wasm
 ```
 
 Funciones:
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f198c43d-d46c-4c86-972d-616f76fa21d7" />
+<img width="973" height="315" alt="image" src="https://github.com/user-attachments/assets/cfab8141-42ac-4beb-aa9a-0ae39d1556e3" />
+
 
 Encontramos que la función exportada principal es:
 
