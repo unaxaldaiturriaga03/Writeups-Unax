@@ -32,6 +32,7 @@ El binario fue cargado en **Ghidra** para analizar su lógica interna. Tras deco
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/be31de6a-b5ef-4e18-bfde-bdb175e732fb" />
 
+```
 funcimain(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,undefined8 param_5,
     undefined8 param_6,undefined8 param_7,undefined8 param_8)
 
@@ -97,7 +98,7 @@ funcimain(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 pa
                     /* WARNING: Subroutine does not return */
   exit(1);
 }
-
+```
 on main:
 
 - El registro **EBX** se inicializa con el valor:
