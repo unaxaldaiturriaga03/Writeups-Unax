@@ -41,6 +41,7 @@ wasm2wat pocketwatch.wasm
 
 Esto me permitió inspeccionar la lógica interna del programa.
 
+```wat
 [/Descargas/rev_clock_work_memory]
 $ wasm2wat pocketwatch.wasm    
 (module
@@ -149,7 +150,7 @@ $ wasm2wat pocketwatch.wasm
   (export "emscripten_stack_get_current" (func 3))
   (elem (;0;) (i32.const 1) func 0)
   (data (;0;) (i32.const 1024) "\1c\1b\010#{0&\0b=p=\0b~0\147\7fs'un>"))
-
+```
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9fd15035-f865-4736-8026-df26155de441" />
 
