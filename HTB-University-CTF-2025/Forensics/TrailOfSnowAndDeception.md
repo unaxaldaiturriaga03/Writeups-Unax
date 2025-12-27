@@ -50,7 +50,7 @@ Inspeccionando respuestas HTTP del servidor, se observó claramente la versión 
 Para ello lo que hemos hecho es filtrar en wireshark por http.request.uri contains "cacti", luego he analizado el primer frame y le hemos dado a follow http stream.
 Para buscar la version he hecho control+f y buscar "cactiVersion" y ahi me ha salido la version.
 
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/5c86ea8b-f692-4a71-8418-277d54fb50ee" />
+<img width="1263" height="1080" alt="image" src="https://github.com/user-attachments/assets/f55067b2-dc1b-4c20-ae2b-a7bf058965b6" />
 
 ### ✅ Flag
 
