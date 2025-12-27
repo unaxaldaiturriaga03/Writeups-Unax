@@ -203,6 +203,7 @@ El programa recorre **23 bytes** de datos ofuscados, aplica una operación **XOR
 
 <img width="805" height="617" alt="image" src="https://github.com/user-attachments/assets/97115e80-d80e-4b36-a882-95bbd7faab80" />
 
+En la imagen se puede ver el fragmento donde se reserva la memoria y comienza el bucle que descifra la flag.
 ---
 
 ### 🧵 Terminador nulo
