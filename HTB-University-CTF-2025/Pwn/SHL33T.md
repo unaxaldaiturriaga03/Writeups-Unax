@@ -14,14 +14,15 @@ El reto **SHL33T** es un desafío de **ingeniería inversa y explotación binari
 - **Python 3** – Automatización de la explotación remota
 - **Linux x86_64**
 
-<img width="554" height="48" alt="image" src="https://github.com/user-attachments/assets/bdca5e38-4127-4b9f-933c-a9479b469ca3" />
+<img width="1054" height="348" alt="image" src="https://github.com/user-attachments/assets/bdca5e38-4127-4b9f-933c-a9479b469ca3" />
 
-<img width="404" height="31" alt="image" src="https://github.com/user-attachments/assets/78184a9c-74e7-4729-9c9f-56c9bc06db97" />
+<img width="804" height="331" alt="image" src="https://github.com/user-attachments/assets/78184a9c-74e7-4729-9c9f-56c9bc06db97" />
 
 ---
 
 Running the program:
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a5afa746-0841-4e0f-ba30-e03e61cbef61" />
+<img width="334" height="191" alt="image" src="https://github.com/user-attachments/assets/1bdbb8ee-2deb-43d3-a0a2-e5452ecf19e0" />
+
 
 
 ## 🔍 Análisis estático con Ghidra
