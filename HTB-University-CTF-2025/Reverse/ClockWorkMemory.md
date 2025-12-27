@@ -41,7 +41,7 @@ wasm2wat pocketwatch.wasm
 
 Esto nos permitió inspeccionar la lógica interna del programa.
 
-┌──-[~/Descargas/rev_clock_work_memory]
+[~/Descargas/rev_clock_work_memory]
 $ wasm2wat pocketwatch.wasm    
 (module
   (type (;0;) (func))
