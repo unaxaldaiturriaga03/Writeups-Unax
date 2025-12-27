@@ -182,6 +182,13 @@ What is the system machine hostname?
 
 ### 🔍 Análisis
 
+http.request.uri contains "f54Avbg4"
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/b1aa1fdc-d5c6-4564-81ce-b11e54bbe683" />
+
+Si hacermos Http stream:
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/411aad90-cfb3-4cb3-b6b4-fcdd70004800" />
+
+
 El atacante ejecutó remotamente el comando `hostname`.  
 La respuesta estaba cifrada con **AES-256-CBC** y codificada en **Base64**, utilizando las claves embebidas en el webshell.
 
@@ -206,18 +213,26 @@ What is the database password used by Cacti?
 
 ### 🔍 Análisis
 
-Se detectó la ejecución del comando:
+Si hacemos http.request.uri contains "f54Avbg4"
+Encontramos el config.php
 
 ```bash
 cat include/config.php
 ```
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f010b637-40c6-41ea-b052-fb88d8a48914" />
 
 El response HTTP:
 - Estaba marcado como *ignored* en Wireshark
 - Usaba `Transfer-Encoding: chunked`
 - Estaba cifrado con AES-256-CBC
 
+Seguimos el HTTP Stream del frame:
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/65619c91-e578-4b14-8236-813b52244eb7" />
+
 Tras decodificar y descifrar el contenido, se obtuvo el archivo `include/config.php`, donde aparecía la contraseña de la base de datos.
+
+
 
 ### ✅ Flag
 
