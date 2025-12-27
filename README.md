@@ -30,6 +30,8 @@ Si en el futuro realizo writeups de plataformas distintas a las actuales (por ej
 El contenido está pensado con un **enfoque educativo**.
 
 ---
+## 🗂️ Estructura de carpetas
+
 writeups/
 ├── README.md
 ├── LICENSE
