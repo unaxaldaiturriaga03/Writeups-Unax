@@ -69,6 +69,11 @@ What is the set of credentials used to log in to the instance?
 
 Revisando peticiones HTTP POST al endpoint de login de Cacti, se detectaron credenciales enviadas en texto plano.
 
+Parecido a antes http.request.method contains==POST
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/105ed397-06c4-4221-97c8-bd20ef03efd7" />
+
+
 ### ✅ Flag
 
 ```
@@ -85,6 +90,8 @@ Three malicious PHP files are involved in the attack. In order of appearance in 
 ### 🔍 Análisis
 
 Aplicando filtros en Wireshark (`http.request.uri contains ".php"`) y centrándonos en rutas no legítimas bajo `/cacti/`, se identificaron tres webshells con nombres aleatorios.
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f3946216-8e00-41e9-958c-4efb5e9d563a" />
 
 El orden de aparición fue:
 
@@ -109,6 +116,10 @@ What file gets downloaded using curl during exploitation process?
 
 Filtrando peticiones con el User-Agent `curl/8.11.1`, se observó la descarga directa de un archivo ejecutable durante el proceso de explotación.
 
+En wireshark, `http.user_agent contains "curl"`
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f37bbdee-b82c-4dfb-b0c9-9e45b8d47232" />
+
 ### ✅ Flag
 
 ```
@@ -124,7 +135,11 @@ What is the name of the variable in one of the three malicious PHP files that st
 
 ### 🔍 Análisis
 
-Uno de los webshells (`f54Avbg4.php`) fue reconstruido a partir de un payload Base64. En el código PHP resultante se observó:
+En wireshark si vamos al frame del /bash de la flag numero 4 y hacermos Http stream  podemos observar lo siguiente:
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/40e24cea-239a-45bd-8f26-4bee8a898ec0" />
+
+
 
 ```php
 $a54vag = shell_exec($A4gVaXzY);
