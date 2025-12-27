@@ -234,18 +234,3 @@ Tras decodificar y descifrar el contenido, se obtuvo el archivo `include/config.
 ```
 HTB{cactiP@ssw0rd!}
 ```
-
----
-
-## 🏁 Conclusión
-
-Este reto recrea un **compromiso realista de Cacti**, combinando:
-- Credenciales débiles
-- Upload de webshells
-- Ejecución remota de comandos
-- Cifrado de la salida para evadir análisis
-- Exfiltración de credenciales sensibles
-
-El uso de cifrado simétrico dentro del webshell añade una capa extra de dificultad, obligando a un análisis profundo del tráfico y del código malicioso.
-
-
