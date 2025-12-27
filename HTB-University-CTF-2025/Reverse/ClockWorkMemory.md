@@ -219,8 +219,8 @@ Esto añade un terminador `\0`, indicando el final de la cadena.
 
 El binario compara byte a byte la cadena generada con la entrada del usuario:
 
-- Si coinciden completamente → retorna `1`
-- Si no coinciden → retorna `0`
+- Si coinciden completamente → devuelve `1`
+- Si no coinciden → devuelve `0`
 
 Este diseño **no permite brute force incremental**, ya que el valor `0` solo indica *"no es correcto"*, sin revelar información parcial.
 
