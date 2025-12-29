@@ -69,20 +69,6 @@ Se asumen conocimientos básicos de Linux, redes y seguridad informática.
 
 ---
 
-## 🛠️ Herramientas utilizadas
-
-Algunas herramientas que aparecen habitualmente en los writeups:
-
-- nmap
-- burpsuite
-- gobuster / ffuf
-- pwntools
-- gdb
-- python
-- herramientas de criptografía y forensics
-
----
-
 ## ⚠️ Aviso legal
 
 Este repositorio tiene fines **educativos**.
