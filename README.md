@@ -32,15 +32,21 @@ El contenido está pensado con un **enfoque educativo**.
 ---
 ## 🗂️ Estructura de carpetas
 ```
-writeups/
+CTF-Writeups-Spanish/
 ├── README.md
 ├── LICENSE
-└── writeups/
+├── picoCTF/
+│ ├── Web/
+│ ├── Pwn/
+│ ├── Crypto/
+│ └── Forensics/
 ├── HackTheBox/
 │ ├── Web/
 │ ├── Pwn/
 │ ├── Crypto/
 │ └── Forensics/
+├── Labs/
+│ ├── Nombre-del-laboratorio/
 └── CTFs/
 └── Nombre-del-CTF/
 ├── Web/
