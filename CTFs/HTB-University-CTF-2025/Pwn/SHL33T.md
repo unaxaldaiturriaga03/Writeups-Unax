@@ -99,7 +99,7 @@ funcimain(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 pa
   exit(1);
 }
 ```
-on main:
+main:
 
 - El registro **EBX** se inicializa con el valor:
   ```
