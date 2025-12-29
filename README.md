@@ -35,23 +35,28 @@ El contenido está pensado con un **enfoque educativo**.
 CTF-Writeups-Spanish/
 ├── README.md
 ├── LICENSE
+│
 ├── picoCTF/
 │ ├── Web/
 │ ├── Pwn/
 │ ├── Crypto/
 │ └── Forensics/
+│
 ├── HackTheBox/
 │ ├── Web/
 │ ├── Pwn/
 │ ├── Crypto/
 │ └── Forensics/
+│
 ├── Labs/
-│ ├── Nombre-del-laboratorio/
-└── CTFs/
-└── Nombre-del-CTF/
-├── Web/
-├── Pwn/
-└── Crypto/
+│ └── Nombre-del-laboratorio/
+│
+├── CTFs/
+│   └── Nombre-del-CTF/
+│       ├── Web/
+│       ├── Pwn/
+│       └── Crypto/
+
 ```
 Cada reto tiene su propia carpeta con un `README.md` donde se documenta la solución.
 
