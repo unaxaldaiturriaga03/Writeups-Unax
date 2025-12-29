@@ -14,7 +14,7 @@ Un escaneo inicial de red reveló que el **puerto 21/TCP** estaba abierto:
 
 ```bash
 nmap -sV -p 21 <TARGET-IP>
-
+```
 **Resultado:**
 
 ```text
