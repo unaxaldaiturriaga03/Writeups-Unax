@@ -96,5 +96,3 @@ Todos los retos documentados se han realizado en entornos controlados y legales.
 Este proyecto se distribuye bajo la licencia MIT.
 Consulta el archivo `LICENSE` para más información.
 
-## 🗂️ Estructura de carpetas
-
