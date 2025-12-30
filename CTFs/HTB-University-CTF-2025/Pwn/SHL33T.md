@@ -1,13 +1,13 @@
 
 # Write-up – SHL33T (Hack The Box)
 
-## 🧩 Introducción
+##  Introducción
 
 El reto **SHL33T** es un desafío de **ingeniería inversa y explotación binaria básica** cuyo objetivo es manipular el valor de un registro para cumplir una condición interna del programa y obtener la flag. El ejercicio está orientado a trabajar conceptos de **arquitectura x86_64**, **shellcode**, **análisis estático** y **análisis dinámico**.
 
 ---
 
-## 🛠️ Herramientas utilizadas
+##  Herramientas utilizadas
 
 - **Ghidra** – Herramienta de ingeniería inversa para análisis estático del binario
 - **GDB** – Depurador para análisis dinámico y control del flujo de ejecución
@@ -26,7 +26,7 @@ Running the program:
 
 
 
-## 🔍 Análisis estático con Ghidra
+##  Análisis estático con Ghidra
 
 El binario fue cargado en **Ghidra** para analizar su lógica interna. Tras decompilar la función `main`, se observaron los siguientes puntos clave:
 
@@ -124,7 +124,7 @@ Esto indica claramente una **ejecución de código controlada por el usuario**.
 
 ---
 
-## 🧠 Análisis del reto
+##  Análisis del reto
 
 La diferencia entre el valor inicial y el valor esperado:
 
@@ -145,7 +145,7 @@ shl ebx, 16
 
 ---
 
-## 🧪 Análisis dinámico con GDB
+##  Análisis dinámico con GDB
 
 Mediante **GDB** se confirmó el flujo de ejecución del binario:
 
@@ -159,7 +159,7 @@ Esto confirmó la viabilidad de inyectar **shellcode mínimo** para modificar di
 
 ---
 
-## 💣 Shellcode utilizado
+##  Shellcode utilizado
 
 El shellcode necesario es extremadamente simple:
 
@@ -176,7 +176,7 @@ C1 E3 10 C3
 
 ---
 
-## 🚀 Explotación remota
+##  Explotación remota
 
 Para explotar el servicio remoto, se desarrolló un script en **Python** que establece una conexión por socket, envía el shellcode y lee toda la salida del servidor hasta el cierre de la conexión.
 
@@ -200,7 +200,7 @@ s.close()
 
 ---
 
-## 🏁 Resultado
+##  Resultado
 
 Tras ejecutar el shellcode:
 
@@ -215,7 +215,7 @@ HTB{sh1ft_2_th3_l3ft_sh1ft_2_th3_r1ght_77447a52efe4b5c0b1d022ff66bd278b}
 
 ---
 
-## 📌 Conclusión
+##  Conclusión
 
 Este reto demuestra la importancia de:
 
@@ -228,9 +228,7 @@ Un desafío limpio y didáctico para reforzar conceptos fundamentales de explota
 
 ---
 
-## ✍️ Autor
+##  Autor
 
 **unax**  
 Hack The Box – Binary Exploitation
-
-
