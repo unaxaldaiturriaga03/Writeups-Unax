@@ -16,11 +16,11 @@
 
 Oliver Mirth, el experto forense de Tinselwick, seguía un rastro de polvo brillante que se perdía entre la nieve. No había huellas ni signos de lucha. La luz del Snowglobe en lo alto de la torre Sprucetop parpadeaba débilmente.
 
-> *“Alguien ha estado manipulando la magia”, murmuró Oliver.*
+“Alguien ha estado manipulando la magia”, murmuró Oliver.
 
 Aunque el rastro había desaparecido, el misterio no había hecho más que empezar.
 
-**¿Podrá Oliver descubrir el secreto detrás del brillo que se desvanece?**
+¿Podrá Oliver descubrir el secreto detrás del brillo que se desvanece?
 
 ---
 
@@ -51,7 +51,7 @@ What is the Cacti version in use?
 
 Inspeccionando respuestas HTTP del servidor, se observó claramente la versión de Cacti en el contenido HTML.
 
-Para ello lo que hemos hecho es filtrar en wireshark por `http.request.uri contains "cacti"`, luego he analizado el primer frame y le hemos dado a **Follow HTTP Stream**.  
+Para ello lo que hemos hecho es filtrar en wireshark por `http.request.uri contains "cacti"`, luego he analizado el primer frame y le he dado a **Follow HTTP Stream**.  
 Para buscar la version he hecho **Ctrl + F** y buscar `cactiVersion` y ahi me ha salido la version.
 
 <img width="1263" height="1080" alt="image" src="https://github.com/user-attachments/assets/f55067b2-dc1b-4c20-ae2b-a7bf058965b6" />
@@ -95,9 +95,9 @@ HTB{mernie.thistlewhip:Z4ZP_8QzKA}
 **Pregunta:**  
 Three malicious PHP files are involved in the attack. In order of appearance in the network stream, what are they?
 
-### 🔍 Análisis
+###  Análisis
 
-Aplicando filtros en Wireshark (`http.request.uri contains ".php"`) y centrándonos en rutas no legítimas bajo `/cacti/`, se identificaron tres webshells con nombres aleatorios.
+Aplicando filtros en Wireshark (`http.request.uri contains ".php"`) y centrándonos en rutas no legítimas bajo `/cacti/`, se identificaron tres archivos php con nombres aleatorios.
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f3946216-8e00-41e9-958c-4efb5e9d563a" />
 
@@ -124,7 +124,7 @@ What file gets downloaded using curl during exploitation process?
 
 ###  Análisis
 
-Filtrando peticiones con el User-Agent `curl/8.11.1`, se observó la descarga directa de un archivo ejecutable durante el proceso de explotación.
+Filtrando peticiones con el User-Agent `curl/8.5.0`, se observó la descarga directa de un archivo ejecutable durante el proceso de explotación.
 
 En wireshark, `http.user_agent contains "curl"`
 
