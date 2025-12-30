@@ -149,7 +149,6 @@ Y sabiendo que el muelle correcto es **D-004**, la flag queda:
 ```
 HTB{NombreDelPuerto_D-004}
 ```
-*(Dependiendo del reto, el nombre del muelle puede o no ser requerido junto al ID.)*
 
 ---
 
