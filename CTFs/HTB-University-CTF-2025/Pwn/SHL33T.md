@@ -20,7 +20,7 @@ El reto **SHL33T** es un desafío de **ingeniería inversa y explotación binari
 
 ---
 
-Running the program:
+Ejecutando el programa:
 
 <img width="1334" height="591" alt="image" src="https://github.com/user-attachments/assets/1bdbb8ee-2deb-43d3-a0a2-e5452ecf19e0" />
 
