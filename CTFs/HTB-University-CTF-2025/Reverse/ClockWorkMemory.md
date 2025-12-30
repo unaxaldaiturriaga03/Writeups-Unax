@@ -21,7 +21,7 @@ Twillie's *"Clockwork Memory"* pocketwatch is broken. The memory it holds, a pre
 
 ##  Descripción
 
-La historia narra un reloj con memoria distorsionada que debe restaurarse con una clave correcta. Esto sugiere que **la flag está ofuscada dentro del binario**, y que debemos analizar su lógica interna para recuperarla.
+La historia narra un reloj con memoria distorsionada que debe restaurarse con una clave correcta. Esto sugiere que **la flag está cifrada dentro del binario**, y que debemos analizar su lógica interna para recuperarla.
 
 Nuestro objetivo fue **entender cómo reconstruir dicha flag y extraerla sin explotación externa**, basándonos únicamente en **análisis estático y dinámico** del binario.
 
@@ -29,127 +29,81 @@ Se nos da un archivo `pocketwatch.wasm`, un binario **WebAssembly**.
 
 <img width="932" height="300" alt="image" src="https://github.com/user-attachments/assets/ca2beb13-5de5-49f5-979c-37b58eb57fdb" />
 
+Al analizar el archivo con `file`, se confirma que se trata de un binario WebAssembly versión 1 (MVP), compatible con las herramientas estándar de análisis como `wasm2wat`.
+
 ---
 
 ##  Análisis del binario
 
-Convertimos el binario WebAssembly con:
+Convertimos el binario WebAssembly a formato texto (WAT) con:
 
 ```bash
 wasm2wat pocketwatch.wasm
 ```
 
-Esto me permitió inspeccionar la lógica interna del programa.
 
-```wasm
-[/Descargas/rev_clock_work_memory]
-$ wasm2wat pocketwatch.wasm    
-(module
-  (type (;0;) (func))
-  (type (;1;) (func (param i32) (result i32)))
-  (type (;2;) (func (param i32)))
-  (type (;3;) (func (result i32)))
-  (func (;0;) (type 0)
-    nop)
-  (func (;1;) (type 1) (param i32) (result i32)
-    (local i32 i32 i32 i32)
-    global.get 0
-    i32.const 32
-    i32.sub
-    local.tee 2
-    global.set 0
-    local.get 2
-    i32.const 1262702420
-    i32.store offset=27 align=1
-    loop  ;; label = @1
-      local.get 1
-      local.get 2
-      i32.add
-      local.get 2
-      i32.const 27
-      i32.add
-      local.get 1
-      i32.const 3
-      i32.and
-      i32.add
-      i32.load8_u
-      local.get 1
-      i32.load8_u offset=1024
-      i32.xor
-      i32.store8
-      local.get 1
-      i32.const 1
-      i32.add
-      local.tee 1
-      i32.const 23
-      i32.ne
-      br_if 0 (;@1;)
-    end
-    local.get 2
-    i32.const 0
-    i32.store8 offset=23
-    block  ;; label = @1
-      local.get 0
-      i32.load8_u
-      local.tee 3
-      i32.eqz
-      local.get 3
-      local.get 2
-      local.tee 1
-      i32.load8_u
-      local.tee 4
-      i32.ne
-      i32.or
-      br_if 0 (;@1;)
-      loop  ;; label = @2
-        local.get 1
-        i32.load8_u offset=1
-        local.set 4
-        local.get 0
-        i32.load8_u offset=1
-        local.tee 3
-        i32.eqz
-        br_if 1 (;@1;)
-        local.get 1
-        i32.const 1
-        i32.add
-        local.set 1
-        local.get 0
-        i32.const 1
-        i32.add
-        local.set 0
-        local.get 3
-        local.get 4
-        i32.eq
-        br_if 0 (;@2;)
-      end
-    end
-    local.get 3
-    local.get 4
-    i32.sub
-    local.set 0
-    local.get 2
-    i32.const 32
-    i32.add
-    global.set 0
-    local.get 0
-    i32.eqz)
-  (func (;2;) (type 2) (param i32)
-    local.get 0
-    global.set 0)
-  (func (;3;) (type 3) (result i32)
-    global.get 0)
-  (table (;0;) 2 2 funcref)
-  (memory (;0;) 258 258)
-  (global (;0;) (mut i32) (i32.const 66592))
-  (export "memory" (memory 0))
-  (export "check_flag" (func 1))
-  (export "__indirect_function_table" (table 0))
-  (export "_initialize" (func 0))
-  (export "_emscripten_stack_restore" (func 2))
-  (export "emscripten_stack_get_current" (func 3))
-  (elem (;0;) (i32.const 1) func 0)
-  (data (;0;) (i32.const 1024) "\1c\1b\010#{0&\0b=p=\0b~0\147\7fs'un>"))
+Esto me permitió inspeccionar la lógica interna del programa.  
+Para facilitar el análisis, se han omitido partes del código WAT que no aportan información relevante al proceso de construcción y verificación de la flag.
+
+
+### Fragmentos relevantes de `check_flag`
+
+#### Reserva de memoria en el stack
+```wat
+global.get 0
+i32.const 32
+i32.sub
+local.tee 2
+global.set 0
+```
+
+#### Descifrado de la flag mediante XOR
+
+```wat
+loop
+  ...
+  i32.load8_u offset=1024
+  i32.xor
+  i32.store8
+  ...
+  i32.const 23
+  i32.ne
+  br_if 0
+end
+```
+
+#### Terminación de la cadena
+
+```wat
+i32.store8 offset=23
+```
+
+#### Comparación con la entrada del usuario
+
+```wat
+block
+  ...
+  i32.eq
+  br_if
+end
+```
+
+#### Global utilizado como puntero de stack
+
+```wat
+(global (;0;) (mut i32) (i32.const 66592))
+```
+
+El módulo define un global inicializado en `66592`, que actúa como puntero de stack.
+Al reservar memoria para la flag, se restan `32` bytes a este valor, por lo que la flag se construye en la dirección `66592 - 32`.
+De esta forma, es posible leer directamente los 23 bytes generados para recuperar la flag.
+
+### Valores constantes relevantes
+
+* `32`: tamaño del buffer reservado en el stack.
+* `23`: longitud exacta de la flag.
+* `1024`: offset en memoria donde se encuentran los datos cifrados.
+
 ```
 
 Funciones:
@@ -177,61 +131,9 @@ La lógica detectada fue la siguiente:
 
  Esto indica que **la flag se construye internamente antes de la comparación**.
 
----
-
-##  Funcionamiento interno
-
-El flujo más relevante es:
-
-###  Reserva de espacio en el stack
-
-```wat
-global.get 0
-i32.const 32
-i32.sub
-local.tee 2
-global.set 0
-```
-
-Se reservan **32 bytes de stack** para construir la cadena.
-
----
-
-###  Descifrado / XOR
-
-El programa recorre **23 bytes** de datos ofuscados, aplica una operación **XOR** y escribe el resultado en el buffer reservado.
-
-<img width="805" height="617" alt="image" src="https://github.com/user-attachments/assets/97115e80-d80e-4b36-a882-95bbd7faab80" />
-
-En la imagen se puede ver el fragmento donde se reserva la memoria y comienza el bucle que descifra la flag.
-
----
-
-###  Terminador nulo
-
-```wat
-i32.store8 offset=23
-```
-
-Esto añade un terminador `\0`, indicando el final de la cadena.
-
----
-
-###  Comparación contra la entrada
-
-El binario compara byte a byte la cadena generada con la entrada del usuario:
-
-- Si coinciden completamente → devuelve `1`
-- Si no coinciden → devuelve `0`
-
-Este diseño **no permite brute force incremental**, ya que el valor `0` solo indica *"no es correcto"*, sin revelar información parcial.
-
----
-
 ##  Enfoque correcto: lectura directa de memoria
 
-Sabemos que el binario **construye completamente la flag en memoria antes de compararla**.  
-Por tanto, el enfoque correcto es **leer el buffer justo después de que se genere la cadena**.
+El enfoque correcto es **leer el buffer justo después de que se genere la cadena**.
 
 El valor inicial del stack global es:
 
