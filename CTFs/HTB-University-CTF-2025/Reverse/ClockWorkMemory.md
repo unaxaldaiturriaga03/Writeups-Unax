@@ -1,7 +1,7 @@
 
-# 🕰️ Clock Work Memory
+#  Clock Work Memory
 
-## 📌 Información del reto
+##  Información del reto
 
 - **Nombre:** Clock Work Memory  
 - **Dificultad:** Easy  
@@ -11,7 +11,7 @@
 
 ---
 
-## 🧾 Enunciado
+##  Enunciado
 
 **Clock Work Memory**
 
@@ -19,7 +19,7 @@ Twillie's *"Clockwork Memory"* pocketwatch is broken. The memory it holds, a pre
 
 ---
 
-## 🧠 Descripción
+##  Descripción
 
 La historia narra un reloj con memoria distorsionada que debe restaurarse con una clave correcta. Esto sugiere que **la flag está ofuscada dentro del binario**, y que debemos analizar su lógica interna para recuperarla.
 
@@ -31,7 +31,7 @@ Se nos da un archivo `pocketwatch.wasm`, un binario **WebAssembly**.
 
 ---
 
-## 🔍 Análisis del binario
+##  Análisis del binario
 
 Convertimos el binario WebAssembly con:
 
@@ -162,12 +162,12 @@ Encontramos que la función exportada principal es:
 (export "check_flag" (func 1))
 ```
 
-> ⚠️ **Importante:**  
+>  **Importante:**  
 > Esta función **comprueba la flag**, pero **no la imprime**.
 
 ---
 
-### 🧠 Lógica identificada
+###  Lógica identificada
 
 La lógica detectada fue la siguiente:
 
@@ -175,15 +175,15 @@ La lógica detectada fue la siguiente:
 - Se rellena el buffer con datos descifrados mediante **XOR**.
 - Se compara la cadena generada con la entrada del usuario.
 
-📌 Esto indica que **la flag se construye internamente antes de la comparación**.
+ Esto indica que **la flag se construye internamente antes de la comparación**.
 
 ---
 
-## 🧱 Funcionamiento interno
+##  Funcionamiento interno
 
 El flujo más relevante es:
 
-### 📦 Reserva de espacio en el stack
+###  Reserva de espacio en el stack
 
 ```wat
 global.get 0
@@ -197,7 +197,7 @@ Se reservan **32 bytes de stack** para construir la cadena.
 
 ---
 
-### 🔐 Descifrado / XOR
+###  Descifrado / XOR
 
 El programa recorre **23 bytes** de datos ofuscados, aplica una operación **XOR** y escribe el resultado en el buffer reservado.
 
@@ -207,7 +207,7 @@ En la imagen se puede ver el fragmento donde se reserva la memoria y comienza el
 
 ---
 
-### 🧵 Terminador nulo
+###  Terminador nulo
 
 ```wat
 i32.store8 offset=23
@@ -217,7 +217,7 @@ Esto añade un terminador `\0`, indicando el final de la cadena.
 
 ---
 
-### 🔎 Comparación contra la entrada
+###  Comparación contra la entrada
 
 El binario compara byte a byte la cadena generada con la entrada del usuario:
 
@@ -228,7 +228,7 @@ Este diseño **no permite brute force incremental**, ya que el valor `0` solo in
 
 ---
 
-## 🧪 Enfoque correcto: lectura directa de memoria
+##  Enfoque correcto: lectura directa de memoria
 
 Sabemos que el binario **construye completamente la flag en memoria antes de compararla**.  
 Por tanto, el enfoque correcto es **leer el buffer justo después de que se genere la cadena**.
@@ -249,7 +249,7 @@ Leyendo **23 bytes** desde esa dirección se obtiene la flag completa.
 
 ---
 
-## 🏁 Flag
+##  Flag
 
 ```text
 HTB{cl0ck_w0rk_m3m0ry}
@@ -257,9 +257,9 @@ HTB{cl0ck_w0rk_m3m0ry}
 
 ---
 
-## 📌 Conclusiones
+##  Conclusiones
 
-🎯 **Lecciones clave:**
+ **Lecciones clave:**
 
 - No siempre es necesario usar brute force.
 - Entender el flujo de ejecución permite acceder a datos intermedios.
