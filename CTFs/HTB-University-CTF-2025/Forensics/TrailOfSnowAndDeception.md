@@ -1,9 +1,9 @@
-# 🕵️‍♂️ Trail of Snow and Deception  
+#  Trail of Snow and Deception  
 ### *Forensics Write-Up*
 
 ---
 
-## 📌 Información general
+##  Información general
 
 - **Categoría:** Forensics  
 - **Número de flags:** 7  
@@ -12,7 +12,7 @@
 
 ---
 
-## 🧩 Enunciado (traducción)
+##  Enunciado (traducción)
 
 Oliver Mirth, el experto forense de Tinselwick, seguía un rastro de polvo brillante que se perdía entre la nieve. No había huellas ni signos de lucha. La luz del Snowglobe en lo alto de la torre Sprucetop parpadeaba débilmente.
 
@@ -24,7 +24,7 @@ Aunque el rastro había desaparecido, el misterio no había hecho más que empez
 
 ---
 
-## 🧪 Metodología
+##  Metodología
 
 El análisis se realizó sobre un archivo **PCAP**, utilizando principalmente:
 
@@ -42,12 +42,12 @@ Se investigaron:
 
 ---
 
-## 🚩 Flag 1 – Versión de Cacti
+##  Flag 1 – Versión de Cacti
 
 **Pregunta:**  
 What is the Cacti version in use?
 
-### 🔍 Análisis
+###  Análisis
 
 Inspeccionando respuestas HTTP del servidor, se observó claramente la versión de Cacti en el contenido HTML.
 
@@ -67,12 +67,12 @@ HTB{1.2.28}
 
 ---
 
-## 🚩 Flag 2 – Credenciales de acceso
+##  Flag 2 – Credenciales de acceso
 
 **Pregunta:**  
 What is the set of credentials used to log in to the instance?
 
-### 🔍 Análisis
+###  Análisis
 
 Revisando peticiones HTTP POST al endpoint de login de Cacti, se detectaron credenciales enviadas en texto plano.
 
@@ -84,13 +84,13 @@ Parecido a antes `http.request.method contains==POST`
 
 ```
 
-HTB{mernie:thistlewhip:Z4ZP_8QzKA}
+HTB{mernie.thistlewhip:Z4ZP_8QzKA}
 
 ```
 
 ---
 
-## 🚩 Flag 3 – Archivos PHP maliciosos
+##  Flag 3 – Archivos PHP maliciosos
 
 **Pregunta:**  
 Three malicious PHP files are involved in the attack. In order of appearance in the network stream, what are they?
@@ -117,12 +117,12 @@ HTB{JWUA5a1yj.php,ornF85gfQ.php,f54Avbg4.php}
 
 ---
 
-## 🚩 Flag 4 – Archivo descargado con curl
+##  Flag 4 – Archivo descargado con curl
 
 **Pregunta:**  
 What file gets downloaded using curl during exploitation process?
 
-### 🔍 Análisis
+###  Análisis
 
 Filtrando peticiones con el User-Agent `curl/8.11.1`, se observó la descarga directa de un archivo ejecutable durante el proceso de explotación.
 
@@ -140,12 +140,12 @@ HTB{bash}
 
 ---
 
-## 🚩 Flag 5 – Variable que almacena la salida del comando
+##  Flag 5 – Variable que almacena la salida del comando
 
 **Pregunta:**  
 What is the name of the variable in one of the three malicious PHP files that stores the result of the executed system command?
 
-### 🔍 Análisis
+###  Análisis
 
 En wireshark si vamos al frame del `/bash` de la flag numero 4 y hacermos **HTTP Stream** podemos observar lo siguiente:
 
@@ -183,12 +183,12 @@ HTB{$a54vag}
 
 ---
 
-## 🚩 Flag 6 – Hostname del sistema
+##  Flag 6 – Hostname del sistema
 
 **Pregunta:**
 What is the system machine hostname?
 
-### 🔍 Análisis
+###  Análisis
 
 `http.request.uri contains "f54Avbg4"`
 
@@ -215,12 +215,12 @@ HTB{tinselmon01}
 
 ---
 
-## 🚩 Flag 7 – Contraseña de la base de datos de Cacti
+##  Flag 7 – Contraseña de la base de datos de Cacti
 
 **Pregunta:**
 What is the database password used by Cacti?
 
-### 🔍 Análisis
+###  Análisis
 
 Si hacemos `http.request.uri contains "f54Avbg4"`
 Encontramos el `config.php`
