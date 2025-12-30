@@ -18,6 +18,32 @@ El reto **SHL33T** es un desafío de **ingeniería inversa y explotación binari
 
 <img width="1004" height="331" alt="image" src="https://github.com/user-attachments/assets/78184a9c-74e7-4729-9c9f-56c9bc06db97" />
 
+Con el comando `file` vemos que el archivo es un ejecutable ELF de 64 bits para Linux, enlazado dinámicamente.  
+Además, no está *stripped*, por lo que conserva símbolos, algo que facilita su análisis.
+
+Con `checksec` comprobamos las protecciones de seguridad del binario:
+
+- **RELRO completo**  
+   Ejemplo: aunque intentes cambiar a dónde apunta una función como `printf`, la GOT está protegida y no se puede modificar.
+
+- **Stack Canary**  
+   Ejemplo: si escribes más datos de la cuenta en un buffer, el programa lo detecta y se cierra antes de que puedas ejecutar.
+
+- **NX activado**  
+   Ejemplo: aunque inyectes código malicioso en la pila, no se ejecuta porque la pila no tiene permisos de ejecución.
+
+- **PIE activado**  
+   Ejemplo: el binario se carga cada vez en una dirección distinta.
+
+- **Sin Fortify**  
+   Ejemplo: funciones como `strcpy` no realizan comprobaciones extra de tamaño, lo que puede provocar errores si el código no es cuidadoso.
+
+- **No stripped (con símbolos)**  
+   Ejemplo: al abrir el binario en Ghidra o IDA aparecen los nombres de funciones, facilitando mucho el análisis.
+
+
+En resumen, se trata de un binario bien protegido, por lo que no es vulnerable a ataques básicos y requiere un análisis más cuidadoso.
+
 ---
 
 Ejecutando el programa:
@@ -99,7 +125,8 @@ funcimain(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 pa
   exit(1);
 }
 ```
-main:
+El binario reserva memoria ejecutable mediante `mmap`, lee datos controlados por el usuario y los ejecuta directamente.  
+Por tanto, el objetivo es inyectar código que modifique el valor del registro **EBX** (inicialmente `0x1337`) y lo transforme en `0x13370000`, tal y como sugieren los mensajes mostrados por el programa.
 
 - El registro **EBX** se inicializa con el valor:
   ```
@@ -109,10 +136,7 @@ main:
   ```
   ebx == 0x13370000
   ```
-- Si la comparación es correcta, el binario ejecuta:
-  ```
-  system("cat flag.txt")
-  ```
+- Si la comparación es correcta, el binario ejecuta la flag.
 
 Además, se identificó una secuencia crítica donde el programa:
 
@@ -136,12 +160,25 @@ corresponde a un **desplazamiento lógico a la izquierda de 16 bits**:
 ```
 0x1337 << 16 = 0x13370000
 ```
+Desplazar un número 16 bits a la izquierda equivale a añadir cuatro ceros en hexadecimal.  
+Por ello, `0x1337` pasa a ser `0x13370000`.
 
 Por tanto, la instrucción necesaria para resolver el reto es:
 
 ```
 shl ebx, 16
 ```
+**SHL** (*Shift Left*): desplaza el registro **EBX** 16 bits a la izquierda.
+
+Representación en bytes (x86_64):
+
+```
+C1 E3 10 C3
+```
+- `C1` → prefijo para operaciones de *shift* con registros de 32 bits  
+- `E3` → código que indica el registro usado (**EBX**)  
+- `10` → número de bits a desplazar (`16` decimal = `0x10` hexadecimal)  
+- `C3` → instrucción de retorno (*ret*) en x86_64
 
 ---
 
@@ -156,23 +193,6 @@ Mediante **GDB** se confirmó el flujo de ejecución del binario:
 5. Comparación final del valor de `EBX`
 
 Esto confirmó la viabilidad de inyectar **shellcode mínimo** para modificar directamente el registro.
-
----
-
-##  Shellcode utilizado
-
-El shellcode necesario es extremadamente simple:
-
-```
-shl ebx, 16
-ret
-```
-
-Representación en bytes (x86_64):
-
-```
-C1 E3 10 C3
-```
 
 ---
 
@@ -228,7 +248,3 @@ Un desafío limpio y didáctico para reforzar conceptos fundamentales de explota
 
 ---
 
-##  Autor
-
-**unax**  
-Hack The Box – Binary Exploitation
