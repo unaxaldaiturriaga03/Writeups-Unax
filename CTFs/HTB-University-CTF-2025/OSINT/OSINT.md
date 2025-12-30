@@ -1,9 +1,9 @@
 
 # OSINT Writeup – SnowSignal: SleighComms & FrostFleet: RiverWatch
 
-## 📌 Introducción
+##  Introducción
 
-Este documento recoge la resolución de **dos retos OSINT de estilo narrativo** ambientados en un contexto invernal y navideño.  
+Este documento recoge la resolución de **dos retos OSINT de estilo narrativo**.  
 Ambos desafíos comparten un enfoque basado en **análisis de información, correlación de datos y razonamiento lógico**, sin requerir explotación técnica avanzada.
 
 Nota: No se incluyen capturas porque los write-ups se realizaron después del cierre del CTF, lo que impidió acceder nuevamente a las IPs y puertos para obtener evidencias visuales.
@@ -17,9 +17,9 @@ Aunque presentan interfaces interactivas, su resolución se basa principalmente 
 
 ---
 
-## 🛰️ SnowSignal – SleighComms
+##  SnowSignal – SleighComms
 
-### 📖 Enunciado (Original)
+###  Enunciado (Original)
 
 > *"A Signal Operator at Tinselwick Signal Intercept Station has intercepted an emergency transmission from a civilian sleigh that went off-course during a snow squall on Christmas Eve. The pilot managed to send a distress beacon using encoded bell tones before their communication equipment failed. The operator must analyze the bell tone sequence, decode it using the station's reference manual, cross-reference the decoded patterns with the landmark database, and identify the correct location to dispatch the rescue team before time runs out."*  
 >  
@@ -27,7 +27,7 @@ Aunque presentan interfaces interactivas, su resolución se basa principalmente 
 
 ---
 
-### 🔍 Análisis del reto
+###  Análisis del reto
 
 Al acceder a la plataforma del reto, se disponía de varias secciones:
 
@@ -40,13 +40,13 @@ El elemento clave era un **audio con un patrón de pitidos**, que debía ser int
 
 ---
 
-### 🔊 Decodificación del audio
+###  Decodificación del audio
 
 Tras reproducir el audio, se identificó claramente la siguiente secuencia numérica:
-
+```
 12132
 
-
+```
 Cada número representaba una cantidad de pitidos consecutivos.  
 Consultando el **Decoder Manual**, se obtuvo la siguiente equivalencia:
 
@@ -66,37 +66,37 @@ Aplicando esta tabla a la secuencia `1 2 1 3 2`:
 
 ---
 
-### 🧩 Construcción de la flag
+###  Construcción de la flag
 
 Uniendo los códigos obtenidos en el orden correcto:
-
+```
 STFRSTEVFR
-
+```
 Aplicando el formato solicitado por el reto:
-
+```
 HTB{STFRSTEVFR}
-
+```
 ---
 
 ### ✅ Flag final – SnowSignal
-
+```
 HTB{STFRSTEVFR}
-
+```
 ---
 
-## 🚢 FrostFleet – RiverWatch
+##  FrostFleet – RiverWatch
 
 
-### 📖 Enunciado (Original)
+###  Enunciado (Original)
 
 > *"A Maritime Investigator at Tinselwick River Authority has received an automated distress alert from patrol vessel FROSTSTAR, which went dark during a Christmas Eve patrol along the Frostwick River. The vessel's AIS system transmitted one final ""ghost ping"" before all communications ceased. The investigator must analyze the AIS coordinates, calculate distances to all registered river docks using the Haversine formula, cross-reference Captain Wintergale's log entries for observational clues, and identify the exact dock where the vessel ran aground to dispatch the rescue team before the incoming storm makes the river impassable."*  
 >  
 > **Flag Format:** `HTB{DOCK_NAME_DOCK_ID} Example: HTB{HARBOR_POINT_D042}`
-> **Example:** `HTB{HARBOR_POINT_D042}`
+
 
 ---
 
-### 📍 Última señal AIS
+###  Última señal AIS
 
 La última transmisión registrada fue:
 
@@ -107,7 +107,7 @@ A partir de esta ubicación, se sabía que el barco debía encontrarse cerca de 
 
 ---
 
-### ⚓ Muelles candidatos
+###  Muelles candidatos
 
 | Dock ID | Nombre | Distancia |
 |------|----------------------|-----------|
@@ -120,7 +120,7 @@ Las distancias se obtuvieron aplicando el **cálculo de distancia geográfica (H
 
 ---
 
-### 📓 Análisis del diario del capitán
+###  Análisis del diario del capitán
 
 Además de los datos geográficos, el reto incluía un **diario de navegación** del capitán, donde se describían:
 
@@ -139,27 +139,27 @@ apuntaba de forma clara al muelle **D-004**.
 
 ---
 
-### 🧩 Construcción de la flag
+###  Construcción de la flag
 
 Siguiendo el formato especificado:
-
+```
 HTB{DOCK_NAME_DOCK_ID}
-
+```
 Y sabiendo que el muelle correcto es **D-004**, la flag queda:
-
+```
 HTB{NombreDelPuerto_D-004}
-
+```
 *(Dependiendo del reto, el nombre del muelle puede o no ser requerido junto al ID.)*
 
 ---
 
 ### ✅ Flag final – FrostFleet
-
+```
 HTB{NombreDelPuerto_D-004}
-
+```
 ---
 
-## 🧠 Conclusiones
+##  Conclusiones
 
 Estos dos retos destacan por:
 
@@ -172,7 +172,7 @@ Son ejemplos claros de **retos OSINT narrativos**, donde el éxito depende más 
 
 ---
 
-## 🏁 Resumen de flags
+##  Resumen de flags
 
 | Reto | Flag |
 |----|------|
