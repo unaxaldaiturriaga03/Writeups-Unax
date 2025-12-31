@@ -45,6 +45,20 @@ wasm2wat pocketwatch.wasm
 Esto me permitió inspeccionar la lógica interna del programa.  
 Para facilitar el análisis, se han omitido partes del código WAT que no aportan información relevante al proceso de construcción y verificación de la flag.
 
+Funciones:
+<img width="973" height="315" alt="image" src="https://github.com/user-attachments/assets/cfab8141-42ac-4beb-aa9a-0ae39d1556e3" />
+
+
+Encontramos que la función exportada principal es:
+
+```wat
+(export "check_flag" (func 1))
+```
+
+>  **Importante:**  
+> Esta función **comprueba la flag**, pero **no la imprime**.
+
+---
 
 ### Fragmentos relevantes de `check_flag`
 
@@ -104,20 +118,6 @@ De esta forma, es posible leer directamente los 23 bytes generados para recupera
 * `23`: longitud exacta de la flag.
 * `1024`: offset en memoria donde se encuentran los datos cifrados.
 
-Funciones:
-<img width="973" height="315" alt="image" src="https://github.com/user-attachments/assets/cfab8141-42ac-4beb-aa9a-0ae39d1556e3" />
-
-
-Encontramos que la función exportada principal es:
-
-```wat
-(export "check_flag" (func 1))
-```
-
->  **Importante:**  
-> Esta función **comprueba la flag**, pero **no la imprime**.
-
----
 
 ###  Lógica identificada
 
