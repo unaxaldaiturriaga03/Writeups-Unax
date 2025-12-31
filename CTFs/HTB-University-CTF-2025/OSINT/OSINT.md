@@ -1,22 +1,6 @@
 
 # OSINT Writeup – SnowSignal: SleighComms & FrostFleet: RiverWatch
 
-##  Introducción
-
-Este documento recoge la resolución de **dos retos OSINT de estilo narrativo**.  
-Ambos desafíos comparten un enfoque basado en **análisis de información, correlación de datos y razonamiento lógico**, sin requerir explotación técnica avanzada.
-
-Nota: No se incluyen capturas porque los write-ups se realizaron después del cierre del CTF, lo que impidió acceder nuevamente a las IPs y puertos para obtener evidencias visuales.
-
-Los retos abordados son:
-
-- **SnowSignal – SleighComms**
-- **FrostFleet – RiverWatch**
-
-Aunque presentan interfaces interactivas, su resolución se basa principalmente en **interpretar correctamente la información proporcionada** y **extraer conclusiones a partir de patrones y pistas**.
-
----
-
 ##  SnowSignal – SleighComms
 
 ###  Enunciado (Original)
