@@ -74,7 +74,7 @@ What is the set of credentials used to log in to the instance?
 
 ###  Análisis
 
-Revisando peticiones HTTP POST al endpoint de login de Cacti, se detectaron credenciales enviadas en texto plano.
+Revisando peticiones HTTP POST de login de Cacti, se detectaron credenciales enviadas en texto plano.
 
 Parecido a antes `http.request.method contains==POST`
 
