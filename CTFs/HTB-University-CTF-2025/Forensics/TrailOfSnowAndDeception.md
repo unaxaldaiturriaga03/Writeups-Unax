@@ -97,7 +97,7 @@ Three malicious PHP files are involved in the attack. In order of appearance in 
 
 ###  Análisis
 
-Aplicando filtros en Wireshark (`http.request.uri contains ".php"`) y centrándonos en rutas no legítimas bajo `/cacti/`, se identificaron tres archivos php con nombres aleatorios.
+Aplicando filtros en Wireshark (`http.request.uri contains ".php"`) y centrándonos en rutas  `/cacti/`, se identificaron tres archivos php con nombres aleatorios.
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f3946216-8e00-41e9-958c-4efb5e9d563a" />
 
