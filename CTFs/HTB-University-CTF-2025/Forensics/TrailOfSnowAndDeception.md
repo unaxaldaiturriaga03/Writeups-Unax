@@ -51,7 +51,7 @@ What is the Cacti version in use?
 
 Inspeccionando respuestas HTTP del servidor, se observó claramente la versión de Cacti en el contenido HTML.
 
-Para ello lo que hemos hecho es filtrar en wireshark por `http.request.uri contains "cacti"`, luego he analizado el primer frame y le he dado a **Follow HTTP Stream**.  
+Para ello lo que hemos hecho es filtrar en wireshark por `http.request.uri contains "cacti"`, luego he analizado el primer frame y le he dado a **Follow HTTP Stream** para ver la conversación HTTP completa entre cliente y servidor, sin tener que revisar cada paquete de manera individual.
 Para buscar la version he hecho **Ctrl + F** y buscar `cactiVersion` y ahi me ha salido la version.
 
 <img width="1263" height="1080" alt="image" src="https://github.com/user-attachments/assets/f55067b2-dc1b-4c20-ae2b-a7bf058965b6" />
