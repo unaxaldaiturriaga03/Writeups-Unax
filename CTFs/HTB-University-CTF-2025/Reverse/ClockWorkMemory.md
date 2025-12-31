@@ -110,7 +110,7 @@ end
 
 El módulo define un global inicializado en `66592`, que actúa como puntero de stack.
 Al reservar memoria para la flag, se restan `32` bytes a este valor, por lo que la flag se construye en la dirección `66592 - 32`.
-De esta forma, es posible leer directamente los 23 bytes generados para recuperar la flag.
+De esta forma, es posible leer directamente los `23` bytes generados para recuperar la flag.
 
 ### Valores constantes relevantes
 
