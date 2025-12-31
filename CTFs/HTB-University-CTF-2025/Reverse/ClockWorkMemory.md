@@ -104,8 +104,6 @@ De esta forma, es posible leer directamente los 23 bytes generados para recupera
 * `23`: longitud exacta de la flag.
 * `1024`: offset en memoria donde se encuentran los datos cifrados.
 
-```
-
 Funciones:
 <img width="973" height="315" alt="image" src="https://github.com/user-attachments/assets/cfab8141-42ac-4beb-aa9a-0ae39d1556e3" />
 
