@@ -55,8 +55,7 @@ Encontramos que la función exportada principal es:
 (export "check_flag" (func 1))
 ```
 
->  **Importante:**  
-> Esta función **comprueba la flag**, pero **no la imprime**.
+Esta función **comprueba la flag**, pero **no la imprime**.
 
 ---
 
